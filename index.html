@@ -145,7 +145,80 @@
     </style>
 </head>
 <body>
+<div id="auth-screen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #F5F5F7; display: flex; align-items: center; justify-content: center; z-index: 99999; font-family: 'Tajawal', sans-serif; direction: rtl;">
+   <div style="background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 40px 30px; border-radius: 28px; box-shadow: 0 8px 32px rgba(106, 76, 156, 0.1); border: 1px solid rgba(255, 255, 255, 0.5); text-align: center; max-width: 400px; width: 90%;">
+      
+      <h2 style="color: #6A4C9C; margin-bottom: 10px; font-weight: 700;">الروتين الذكي</h2>
+      <p style="color: #555; margin-bottom: 25px; font-size: 15px;">أدخلي كود التفعيل المرسل إليكِ للبدء</p>
+      
+      <input type="text" id="license-key" placeholder="مثال: SR-1234" style="width: 100%; padding: 16px; border-radius: 14px; border: 1px solid #ddd; margin-bottom: 20px; font-family: 'Poppins', 'Tajawal', sans-serif; font-size: 16px; text-align: center; outline: none; box-sizing: border-box; background: #fff;">
+      
+      <button onclick="verifyKey()" id="verify-btn" style="width: 100%; padding: 16px; border: none; border-radius: 14px; background: linear-gradient(135deg, #6A4C9C, #9982bb); color: white; font-size: 16px; font-family: 'Tajawal', sans-serif; cursor: pointer; font-weight: bold; transition: opacity 0.3s;">تفعيل الدخول</button>
+      
+      <p id="error-msg" style="color: #e74c3c; margin-top: 15px; font-size: 14px; display: none;"></p>
+   </div>
+</div>
 
+<script>
+// الرابط الخاص بك تم إضافته هنا بنجاح
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyELNUTchCzZ1A7Y-f6ANFxcDsILkxQ1u7tN4_EURG2FmK0c3TYo3OS7Xbrj0NBlaMQ/exec";
+
+// التحقق من وجود بصمة للجهاز، أو إنشاء واحدة جديدة
+let deviceID = localStorage.getItem("smartRoutineDeviceID");
+if (!deviceID) {
+    deviceID = 'dev_' + Math.random().toString(36).substr(2, 9);
+    localStorage.setItem("smartRoutineDeviceID", deviceID);
+}
+
+// دالة التحقق من الكود
+function verifyKey() {
+    const keyInput = document.getElementById("license-key").value.trim();
+    const btn = document.getElementById("verify-btn");
+    const errorMsg = document.getElementById("error-msg");
+
+    if(!keyInput) {
+        errorMsg.innerText = "يرجى إدخال الكود أولاً.";
+        errorMsg.style.display = "block";
+        return;
+    }
+
+    btn.innerText = "جاري التحقق...";
+    btn.style.opacity = "0.7";
+    errorMsg.style.display = "none";
+
+    // إرسال الطلب لجوجل
+    fetch(`${GOOGLE_SCRIPT_URL}?key=${encodeURIComponent(keyInput)}&device=${encodeURIComponent(deviceID)}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === "success") {
+                // الكود صحيح، إخفاء شاشة القفل وحفظ الدخول
+                document.getElementById("auth-screen").style.display = "none";
+                localStorage.setItem("smartRoutineActiveKey", keyInput);
+            } else {
+                // الكود خطأ أو مستخدم
+                errorMsg.innerText = data.msg;
+                errorMsg.style.display = "block";
+                btn.innerText = "تفعيل الدخول";
+                btn.style.opacity = "1";
+            }
+        })
+        .catch(error => {
+            errorMsg.innerText = "حدث خطأ في الاتصال، حاولي مرة أخرى.";
+            errorMsg.style.display = "block";
+            btn.innerText = "تفعيل الدخول";
+            btn.style.opacity = "1";
+        });
+}
+
+// التحقق التلقائي إذا كان العميل قد سجل دخوله مسبقاً بنجاح
+window.onload = function() {
+    const savedKey = localStorage.getItem("smartRoutineActiveKey");
+    if (savedKey) {
+        document.getElementById("license-key").value = savedKey;
+        verifyKey(); // يفحص الكود المحفوظ تلقائياً خلف الكواليس
+    }
+}
+</script>
 <div id="welcomePopup" onclick="this.style.display='none'">
     <div class="popup-content" onclick="event.stopPropagation()">
         <h2 style="border:none; text-align:center; padding:0; margin-bottom: 15px; color: var(--primary);">مرحباً بكِ في SmartRoutine 🌸</h2>
