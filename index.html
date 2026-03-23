@@ -145,39 +145,50 @@
     </style>
 </head>
 <body>
-<div id="auth-screen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #F5F5F7; display: flex; align-items: center; justify-content: center; z-index: 99999; font-family: 'Tajawal', sans-serif; direction: rtl;">
-   <div style="background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 40px 30px; border-radius: 28px; box-shadow: 0 8px 32px rgba(106, 76, 156, 0.1); border: 1px solid rgba(255, 255, 255, 0.5); text-align: center; max-width: 400px; width: 90%;">
-      
-      <h2 style="color: #6A4C9C; margin-bottom: 10px; font-weight: 700;">الروتين الذكي</h2>
-      <p style="color: #555; margin-bottom: 25px; font-size: 15px;">أدخلي كود التفعيل المرسل إليكِ للبدء</p>
-      
-      <input type="text" id="license-key" placeholder="مثال: SR-1234" style="width: 100%; padding: 16px; border-radius: 14px; border: 1px solid #ddd; margin-bottom: 20px; font-family: 'Poppins', 'Tajawal', sans-serif; font-size: 16px; text-align: center; outline: none; box-sizing: border-box; background: #fff;">
-      
-      <button onclick="verifyKey()" id="verify-btn" style="width: 100%; padding: 16px; border: none; border-radius: 14px; background: linear-gradient(135deg, #6A4C9C, #9982bb); color: white; font-size: 16px; font-family: 'Tajawal', sans-serif; cursor: pointer; font-weight: bold; transition: opacity 0.3s;">تفعيل الدخول</button>
-      
-      <p id="error-msg" style="color: #e74c3c; margin-top: 15px; font-size: 14px; display: none;"></p>
-   </div>
+
+<div id="auth-screen" class="no-print" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--bg-color); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 99999; font-family: 'Tajawal', sans-serif; direction: rtl; padding: 20px; box-sizing: border-box;">
+    <div style="background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 28px; padding: 40px 30px; box-shadow: 0 10px 40px rgba(106, 76, 156, 0.08); border: 1px solid rgba(255, 255, 255, 0.5); text-align: center; width: 100%; max-width: 400px; box-sizing: border-box;">
+        
+        <h2 style="font-size: 26px; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0 0 10px 0;">الروتين الذكي ✿</h2>
+        <p style="font-size: 14px; color: #666; margin: 0 0 30px 0; line-height: 1.5;">أدخلي رقم الجوال المسجل في طلبك للدخول إلى منصتك</p>
+        
+        <div style="text-align: right; margin-bottom: 24px;">
+            <label style="display: block; margin-bottom: 8px; font-weight: 700; font-size: 13px; color: var(--primary); padding-right: 5px;">رقم الجوال</label>
+            <input type="tel" id="userPhone" placeholder="05XXXXXXXX" maxlength="10" autocomplete="tel" style="width: 100%; padding: 18px; border-radius: 20px; border: 1.5px solid #E1E1E7; background: rgba(255, 255, 255, 0.9); font-family: 'Poppins', sans-serif; font-size: 16px; outline: none; transition: all 0.3s ease; box-sizing: border-box; text-align: center; letter-spacing: 2px;">
+        </div>
+
+        <button onclick="handleLogin()" id="verify-btn" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border: none; width: 100%; padding: 18px; border-radius: 20px; font-family: 'Tajawal', sans-serif; font-weight: 700; font-size: 16px; cursor: pointer; box-shadow: 0 8px 20px rgba(106, 76, 156, 0.2); transition: all 0.3s ease;">تسجيل الدخول</button>
+        
+        <p id="error-msg" style="color: #d35400; font-size: 13px; margin-top: 15px; font-weight: 600; display: none; margin-bottom: 0;"></p>
+    </div>
+    
+    <div style="text-align: center; color: #888; font-size: 12px; margin-top: 25px; font-weight: 500;">
+        صنع من قبل عوالم Awalem
+    </div>
 </div>
 
 <script>
-// الرابط الخاص بك تم إضافته هنا بنجاح
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyELNUTchCzZ1A7Y-f6ANFxcDsILkxQ1u7tN4_EURG2FmK0c3TYo3OS7Xbrj0NBlaMQ/exec";
+// الرابط الجديد الخاص بك تم إضافته بنجاح لدعم POST ورقم الجوال
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxi723iATNxLb-WPJp8q05KhAnUNWR20c8kVvYHvFGBj7dQhJ5kynRhnyGzecWgfa3j/exec";
 
-// التحقق من وجود بصمة للجهاز، أو إنشاء واحدة جديدة
-let deviceID = localStorage.getItem("smartRoutineDeviceID");
-if (!deviceID) {
-    deviceID = 'dev_' + Math.random().toString(36).substr(2, 9);
-    localStorage.setItem("smartRoutineDeviceID", deviceID);
+// 1. استرجاع أو إنشاء بصمة الجهاز
+function getDeviceId() {
+    let deviceId = localStorage.getItem('smart_routine_device_id');
+    if (!deviceId) {
+        deviceId = 'DEV-' + Math.random().toString(36).substr(2, 9) + '-' + Date.now();
+        localStorage.setItem('smart_routine_device_id', deviceId);
+    }
+    return deviceId;
 }
 
-// دالة التحقق من الكود
-function verifyKey() {
-    const keyInput = document.getElementById("license-key").value.trim();
+// 2. معالجة الدخول وإرسال البيانات لجوجل شيت بطريقة POST
+async function handleLogin() {
+    const phoneInput = document.getElementById("userPhone").value.trim();
     const btn = document.getElementById("verify-btn");
     const errorMsg = document.getElementById("error-msg");
 
-    if(!keyInput) {
-        errorMsg.innerText = "يرجى إدخال الكود أولاً.";
+    if (!/^05\d{8}$/.test(phoneInput)) {
+        errorMsg.innerText = "يرجى إدخال رقم جوال صحيح يبدأ بـ 05";
         errorMsg.style.display = "block";
         return;
     }
@@ -186,39 +197,50 @@ function verifyKey() {
     btn.style.opacity = "0.7";
     errorMsg.style.display = "none";
 
-    // إرسال الطلب لجوجل
-    fetch(`${GOOGLE_SCRIPT_URL}?key=${encodeURIComponent(keyInput)}&device=${encodeURIComponent(deviceID)}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === "success") {
-                // الكود صحيح، إخفاء شاشة القفل وحفظ الدخول
-                document.getElementById("auth-screen").style.display = "none";
-                localStorage.setItem("smartRoutineActiveKey", keyInput);
-            } else {
-                // الكود خطأ أو مستخدم
-                errorMsg.innerText = data.msg;
-                errorMsg.style.display = "block";
-                btn.innerText = "تفعيل الدخول";
-                btn.style.opacity = "1";
-            }
-        })
-        .catch(error => {
-            errorMsg.innerText = "حدث خطأ في الاتصال، حاولي مرة أخرى.";
-            errorMsg.style.display = "block";
-            btn.innerText = "تفعيل الدخول";
-            btn.style.opacity = "1";
-        });
-}
+    const deviceId = getDeviceId();
 
-// التحقق التلقائي إذا كان العميل قد سجل دخوله مسبقاً بنجاح
-window.onload = function() {
-    const savedKey = localStorage.getItem("smartRoutineActiveKey");
-    if (savedKey) {
-        document.getElementById("license-key").value = savedKey;
-        verifyKey(); // يفحص الكود المحفوظ تلقائياً خلف الكواليس
+    try {
+        const response = await fetch(GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({
+                'phone': phoneInput,
+                'deviceId': deviceId
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.status === "success") {
+            // إخفاء شاشة الدخول وتفعيل المنصة
+            document.getElementById("auth-screen").style.display = "none";
+            localStorage.setItem("smart_routine_logged_in", "true");
+            localStorage.setItem("smart_routine_user_phone", phoneInput);
+        } else {
+            errorMsg.innerText = data.message || data.msg;
+            errorMsg.style.display = "block";
+            btn.innerText = "تسجيل الدخول";
+            btn.style.opacity = "1";
+        }
+    } catch (error) {
+        errorMsg.innerText = "حدث خطأ في الاتصال، حاولي مرة أخرى.";
+        errorMsg.style.display = "block";
+        btn.innerText = "تسجيل الدخول";
+        btn.style.opacity = "1";
     }
 }
+
+// دمج التحقق من الدخول التلقائي مع تهيئة المنصة
+document.addEventListener('DOMContentLoaded', () => {
+    // إذا كان مسجل دخول مسبقاً، اخفِ الشاشة
+    if (localStorage.getItem("smart_routine_logged_in") === "true") {
+        document.getElementById("auth-screen").style.display = "none";
+    }
+    // تشغيل المنصة (بناء الجداول والمهام)
+    init();
+});
 </script>
+
 <div id="welcomePopup" onclick="this.style.display='none'">
     <div class="popup-content" onclick="event.stopPropagation()">
         <h2 style="border:none; text-align:center; padding:0; margin-bottom: 15px; color: var(--primary);">مرحباً بكِ في SmartRoutine 🌸</h2>
@@ -757,9 +779,11 @@ window.onload = function() {
         btn.innerHTML = "استخراج الجدول والترجمة الآلية 📄";
         btn.disabled = false;
     }
-
-    window.onload = init;
 </script>
+
+<div class="no-print" style="text-align: center; color: #888; font-size: 13px; margin-top: 40px; margin-bottom: 20px; font-weight: 500;">
+    صنع من قبل عوالم Awalem
+</div>
 
 </body>
 </html>
