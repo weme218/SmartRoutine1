@@ -187,26 +187,22 @@ async function handleLogin() {
     const btn = document.getElementById("verify-btn");
     const errorMsg = document.getElementById("error-msg");
 
-    // 1. التحقق المطور: يقبل الرقم إذا بدأ بـ 05 أو بـ 5 مباشرة
+    // 1. التحقق المطور: يقبل الرقم سواء بدأ بـ 05 أو 5 مباشرة
     if (!/^(05|5)\d{8}$/.test(phoneInput)) {
         errorMsg.innerText = "يرجى إدخال رقم جوال صحيح";
         errorMsg.style.display = "block";
         return;
     }
 
-    // 2. توحيد الرقم: إذا بدأ بـ 0 نشيله عشان يطابق اللي وصل في الإكسل (530xxxx)
+    // 2. توحيد الرقم: لو بدأ بـ 0 نشيله عشان يطابق الإكسل (530xxxx)
     if (phoneInput.startsWith('0')) {
         phoneInput = phoneInput.substring(1);
     }
 
-    // الباقي يكمل طبيعي...
+    // 3. تجهيز الواجهة للتحقق
     errorMsg.style.display = "none";
     btn.innerText = "...جاري التحقق";
     btn.style.opacity = "0.7";
-
-    btn.innerText = "جاري التحقق...";
-    btn.style.opacity = "0.7";
-    errorMsg.style.display = "none";
 
     const deviceId = getDeviceId();
 
