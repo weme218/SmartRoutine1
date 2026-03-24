@@ -183,15 +183,26 @@ function getDeviceId() {
 
 // 2. معالجة الدخول وإرسال البيانات لجوجل شيت بطريقة POST
 async function handleLogin() {
-    const phoneInput = document.getElementById("userPhone").value.trim();
+    let phoneInput = document.getElementById("userPhone").value.trim();
     const btn = document.getElementById("verify-btn");
     const errorMsg = document.getElementById("error-msg");
 
-    if (!/^05\d{8}$/.test(phoneInput)) {
-        errorMsg.innerText = "يرجى إدخال رقم جوال صحيح يبدأ بـ 05";
+    // 1. التحقق المطور: يقبل الرقم إذا بدأ بـ 05 أو بـ 5 مباشرة
+    if (!/^(05|5)\d{8}$/.test(phoneInput)) {
+        errorMsg.innerText = "يرجى إدخال رقم جوال صحيح";
         errorMsg.style.display = "block";
         return;
     }
+
+    // 2. توحيد الرقم: إذا بدأ بـ 0 نشيله عشان يطابق اللي وصل في الإكسل (530xxxx)
+    if (phoneInput.startsWith('0')) {
+        phoneInput = phoneInput.substring(1);
+    }
+
+    // الباقي يكمل طبيعي...
+    errorMsg.style.display = "none";
+    btn.innerText = "...جاري التحقق";
+    btn.style.opacity = "0.7";
 
     btn.innerText = "جاري التحقق...";
     btn.style.opacity = "0.7";
