@@ -170,6 +170,7 @@
 <script>
 // الرابط الجديد الخاص بك تم إضافته بنجاح لدعم POST ورقم الجوال
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzG9mpNzjbbhnmPHGLwLyAVhyz24kG-o5lO1x1tlYoDREgnvDkh1iyzUCMjvDisOFWd/exec";
+
 // 1. استرجاع أو إنشاء بصمة الجهاز
 function getDeviceId() {
     let deviceId = localStorage.getItem('smart_routine_device_id');
@@ -205,36 +206,6 @@ async function handleLogin() {
 
     const deviceId = getDeviceId();
 
-    try {
-        const response = await fetch(GOOGLE_SCRIPT_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({
-                'phone': phoneInput,
-                'deviceId': deviceId
-            })
-        });
-
-        const data = await response.json();
-
-        if (data.status === "success") {
-            // إخفاء شاشة الدخول وتفعيل المنصة
-            document.getElementById("auth-screen").style.display = "none";
-            localStorage.setItem("smart_routine_logged_in", "true");
-            localStorage.setItem("smart_routine_user_phone", phoneInput);
-        } else {
-            errorMsg.innerText = data.message || data.msg;
-            errorMsg.style.display = "block";
-            btn.innerText = "تسجيل الدخول";
-            btn.style.opacity = "1";
-        }
-    } catch (error) {
-        errorMsg.innerText = "حدث خطأ في الاتصال، حاولي مرة أخرى.";
-        errorMsg.style.display = "block";
-        btn.innerText = "تسجيل الدخول";
-        btn.style.opacity = "1";
-    }
-}
     try {
         const response = await fetch(GOOGLE_SCRIPT_URL, {
             method: 'POST',
