@@ -43,7 +43,6 @@
         .name-input { width: 100%; padding: 16px 18px; border-radius: 14px; border: 2px solid var(--border-light); font-family: 'Tajawal', sans-serif; font-size: 1.05rem; box-sizing: border-box; background: white; transition: 0.3s; }
         .name-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px rgba(106, 76, 156, 0.08); }
         
-        /* Fix Date Input display issues */
         input[type="date"] { text-align: right; direction: rtl; font-family: 'Tajawal', sans-serif; }
 
         .item-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; background: white; border-radius: 14px; margin-bottom: 10px; border: 1px solid #EAEaea; transition: 0.2s; box-sizing: border-box;}
@@ -94,13 +93,9 @@
         .tracker-table th { background: rgba(106, 76, 156, 0.04); color: var(--primary); padding: 13px; text-align: right; font-weight: 800; border: 1px solid #E5E5E5; font-size: 0.95rem;}
         .tracker-table td { padding: 13px; border: 1px solid #E5E5E5; vertical-align: middle;}
         
-        /* تنظيم مربعات التقييم لمنع التداخل */
         .check-boxes { display: flex; gap: 6px; direction: ltr; justify-content: flex-end; flex-wrap: wrap; }
         .box { width: 18px; height: 18px; border: 1.5px solid #C0C0C0; border-radius: 4px; background: white; flex-shrink: 0;}
 
-        /* ==========================================
-           🌟 تحسينات الجوال 🌟
-           ========================================== */
         @media screen and (max-width: 768px) {
             body { padding: 15px 10px; }
             .hero-section { padding: 30px 20px; border-radius: 20px; }
@@ -112,14 +107,10 @@
             .btn-action { font-size: 1.1rem; padding: 16px 20px; }
             .print-page { padding: 20px; border-radius: 20px; }
             .detail-row { flex-direction: column; margin-bottom: 12px; }
-            /* تثبيت المربعات في سطر واحد في الجوال لمنع التداخل العشوائي */
             .check-boxes { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 5px;}
             .box { width: 16px; height: 16px; border-width: 1px;}
         }
 
-        /* ==========================================
-           🖨️ إعدادات الطباعة 🖨️
-           ========================================== */
         @media print {
             body { background: white; padding: 0; }
             .no-print { display: none !important; }
@@ -168,43 +159,45 @@
 </div>
 
 <script>
-// الرابط الجديد الخاص بك تم إضافته بنجاح لدعم POST ورقم الجوال
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxU-GFgnvbVdBCISpf4tzhN80H0CPIHvUAj_LIjaZ_yTTz6-20DWKwAbTSwd210JHhF/exec";
 
-// 1. استرجاع أو إنشاء بصمة الجهاز
+// 1. إنشاء بصمة الجهاز بحماية (عشان ما ينهار المتصفح الخفي)
 function getDeviceId() {
-    let deviceId = localStorage.getItem('smart_routine_device_id');
-    if (!deviceId) {
-        deviceId = 'DEV-' + Math.random().toString(36).substr(2, 9) + '-' + Date.now();
-        localStorage.setItem('smart_routine_device_id', deviceId);
+    try {
+        let deviceId = localStorage.getItem('smart_routine_device_id');
+        if (!deviceId) {
+            deviceId = 'DEV-' + Math.random().toString(36).substr(2, 9) + '-' + Date.now();
+            localStorage.setItem('smart_routine_device_id', deviceId);
+        }
+        return deviceId;
+    } catch (e) {
+        return 'DEV-GUEST-' + Date.now();
     }
-    return deviceId;
 }
 
-// 2. معالجة الدخول وإرسال البيانات لجوجل شيت بطريقة POST
+// 2. معالجة الدخول الآمنة والذكية
 async function handleLogin() {
-    let phoneInput = document.getElementById("userPhone").value.trim();
     const btn = document.getElementById("verify-btn");
     const errorMsg = document.getElementById("error-msg");
+    let phoneInput = document.getElementById("userPhone").value.trim();
 
-    // 1. التحقق المطور: يقبل الرقم سواء بدأ بـ 05 أو 5 مباشرة
-    if (!/^(05|5)\d{8}$/.test(phoneInput)) {
-        errorMsg.innerText = "يرجى إدخال رقم جوال صحيح";
-        errorMsg.style.display = "block";
-        return;
-    }
-
-    // 2. توحيد الرقم: لو بدأ بـ 0 نشيله عشان يطابق الإكسل (530xxxx)
-    if (phoneInput.startsWith('0')) {
-        phoneInput = phoneInput.substring(1);
-    }
-
-    // 3. تجهيز الواجهة للتحقق
+    // إعطاء إشارة للمستخدم فوراً إن الزر شغال
     errorMsg.style.display = "none";
     btn.innerText = "...جاري التحقق";
     btn.style.opacity = "0.7";
 
-    const deviceId = getDeviceId();
+    // حماية الأرقام الخاطئة
+    if (!/^(05|5)\d{8}$/.test(phoneInput)) {
+        errorMsg.innerText = "يرجى إدخال رقم جوال صحيح";
+        errorMsg.style.display = "block";
+        btn.innerText = "تسجيل الدخول";
+        btn.style.opacity = "1";
+        return;
+    }
+
+    if (phoneInput.startsWith('0')) {
+        phoneInput = phoneInput.substring(1);
+    }
 
     try {
         const response = await fetch(GOOGLE_SCRIPT_URL, {
@@ -212,19 +205,17 @@ async function handleLogin() {
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: new URLSearchParams({
                 'phone': phoneInput,
-                'deviceId': deviceId
+                'deviceId': getDeviceId()
             })
         });
 
         const data = await response.json();
 
         if (data.status === "success") {
-            // إخفاء شاشة الدخول وتفعيل المنصة
             document.getElementById("auth-screen").style.display = "none";
-            localStorage.setItem("smart_routine_logged_in", "true");
-            localStorage.setItem("smart_routine_user_phone", phoneInput);
+            try { localStorage.setItem("smart_routine_logged_in", "true"); } catch(e){}
         } else {
-            errorMsg.innerText = data.message || data.msg;
+            errorMsg.innerText = data.message || "الرقم غير مسجل في المتجر";
             errorMsg.style.display = "block";
             btn.innerText = "تسجيل الدخول";
             btn.style.opacity = "1";
@@ -239,11 +230,11 @@ async function handleLogin() {
 
 // دمج التحقق من الدخول التلقائي مع تهيئة المنصة
 document.addEventListener('DOMContentLoaded', () => {
-    // إذا كان مسجل دخول مسبقاً، اخفِ الشاشة
-    if (localStorage.getItem("smart_routine_logged_in") === "true") {
-        document.getElementById("auth-screen").style.display = "none";
-    }
-    // تشغيل المنصة (بناء الجداول والمهام)
+    try {
+        if (localStorage.getItem("smart_routine_logged_in") === "true") {
+            document.getElementById("auth-screen").style.display = "none";
+        }
+    } catch (e) {}
     init();
 });
 </script>
