@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>القاموس الذكي | SmartDictionary</title>
+    <title>القاموس الذكي للعاملات | عوالم Awalem</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
     
     <style>
@@ -13,6 +13,8 @@
             --accent-dark: #8A6070;        
             --bg-color: #FBF5F7;           
             --text-dark: #1d1d1f;
+            --error-color: #ff3b30;
+            --success-color: #34c759;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -99,8 +101,8 @@
             padding: 12px;
             display: none;
         }
-        .msg-box.error { display: block; background: rgba(255, 59, 48, 0.1); color: #ff3b30; }
-        .msg-box.success { display: block; background: rgba(52, 199, 89, 0.1); color: #34c759; }
+        .msg-box.error { display: block; background: rgba(255, 59, 48, 0.1); color: var(--error-color); }
+        .msg-box.success { display: block; background: rgba(52, 199, 89, 0.1); color: var(--success-color); }
 
         .loader {
             border: 3px solid rgba(138, 96, 112, 0.2);
@@ -165,7 +167,7 @@
             @page { margin: 0 !important; size: auto; }
             body { background: white; padding: 1.5cm; }
             .bento-card { border: none; box-shadow: none; padding: 0; margin-bottom: 0;}
-            #loginView, .hero-banner, .intro-section, .controls-header, .word-bank-section, .btn-print, .footer { display: none !important; }
+            #loginView, .hero-banner, .intro-section, .controls-header, .word-bank-section, .btn-print, .footer, .logout-btn { display: none !important; }
             table { width: 100%; table-layout: fixed; border-collapse: collapse; }
             th, td { border: 1px solid #ddd; padding: 12px; font-size: 1.1rem;}
             .category-row td { background-color: #F8E8EE !important; color: black !important; -webkit-print-color-adjust: exact; }
@@ -251,6 +253,8 @@
                     <button class="btn-print" onclick="window.print()">🖨️ طباعة الجدول</button>
                 </div>
             </div>
+            
+            <button class="logout-btn" onclick="logout()" style="background: transparent; border: none; color: var(--accent-dark); text-decoration: underline; box-shadow: none; margin-top: 10px;">تسجيل خروج (للتجربة)</button>
         </div>
 
         <div class="footer">صنع من قبل عوالم Awalem</div>
@@ -308,6 +312,12 @@
             }
         }
 
+        function logout() {
+            localStorage.removeItem('awalem_dictionary_logged_in');
+            document.getElementById('dictionaryView').style.display = 'none';
+            document.getElementById('loginView').style.display = 'block';
+        }
+
         // ================== [ 2. إعدادات القاموس والكلمات ] ==================
         const needsNativeScript = ['am', 'bn', 'hi']; 
         const wordT = { en:"Word", ph:"Salita", id:"Kata", am:"ቃል", or:"Jechoota", sw:"Neno", lg:"Ekigambo", so:"Eray", bn:"শব্দ", hi:"शब्द", fr:"Mot" };
@@ -317,213 +327,211 @@
             {
                 category: "📍 المكان والاتجاه", tc: { en:"Places & Directions", ph:"Lugar/Direksyon", id:"Tempat & Arah", am:"ቦታዎች/አቅጣጫ", or:"Kallattii", sw:"Mahali", lg:"Ebifo", so:"Goobaha", bn:"স্থান", hi:"स्थान", fr:"Lieux" },
                 words: [
-                    { id:101, ar:"فوق", pron:"Fog", np:{am:"ፎግ",bn:"ফোগ",hi:"फोग"}, t:{en:"Up",ph:"Taas",id:"Atas",am:"ላይ",or:"Gubbaa",sw:"Juu",lg:"Wagulu",so:"Kor",bn:"উপরে",hi:"ऊपर",fr:"Haut"} },
-                    { id:102, ar:"تحت", pron:"Taht", np:{am:"ታህት",bn:"তাহত",hi:"ताहत"}, t:{en:"Down",ph:"Baba",id:"Bawah",am:"ታች",or:"Jala",sw:"Chini",lg:"Wansi",so:"Hoos",bn:"নিচে",hi:"नीचे",fr:"Bas"} },
-                    { id:103, ar:"جنب", pron:"Janb", np:{am:"ጃንብ",bn:"জানব",hi:"जंब"}, t:{en:"Beside",ph:"Tabi",id:"Samping",am:"አጠገብ",or:"Cinaa",sw:"Kando",lg:"Kumpi",so:"Agteeda",bn:"পাশে",hi:"बगल में",fr:"À côté"} },
-                    { id:104, ar:"قدام", pron:"Giddam", np:{am:"ጊዳም",bn:"গিদ্দাম",hi:"गिद्दाम"}, t:{en:"In front",ph:"Harap",id:"Depan",am:"ፊት",or:"Fuuldura",sw:"Mbele",lg:"Mumaaso",so:"Horta",bn:"সামনে",hi:"सामने",fr:"Devant"} },
-                    { id:105, ar:"ورا", pron:"Wara", np:{am:"ዋራ",bn:"ওয়ারা",hi:"वरा"}, t:{en:"Behind",ph:"Likod",id:"Belakang",am:"ኋላ",or:"Duuba",sw:"Nyuma",lg:"Mabega",so:"Gadaal",bn:"পেছনে",hi:"पीछे",fr:"Derrière"} },
-                    { id:106, ar:"داخل", pron:"Dakhil", np:{am:"ዳኺል",bn:"দাখিল",hi:"दाखिल"}, t:{en:"Inside",ph:"Loob",id:"Dalam",am:"ውስጥ",or:"Keessa",sw:"Ndani",lg:"Munda",so:"Gudaha",bn:"ভেতরে",hi:"अंदर",fr:"Dedans"} },
-                    { id:107, ar:"برا", pron:"Barra", np:{am:"ባራ",bn:"বাররা",hi:"बर्रा"}, t:{en:"Outside",ph:"Labas",id:"Luar",am:"ውጭ",or:"Alatti",sw:"Nje",lg:"Wabweru",so:"Bannaanka",bn:"বাইরে",hi:"बाहर",fr:"Dehors"} },
-                    { id:108, ar:"يمين", pron:"Yameen", np:{am:"ያሚን",bn:"ইয়ামিন",hi:"यमीन"}, t:{en:"Right",ph:"Kanan",id:"Kanan",am:"ቀኝ",or:"Mirga",sw:"Kulia",lg:"Ddyo",so:"Midig",bn:"ডান",hi:"दाएं",fr:"Droite"} },
-                    { id:109, ar:"يسار", pron:"Yasar", np:{am:"ያሳር",bn:"ইয়াসার",hi:"यसार"}, t:{en:"Left",ph:"Kaliwa",id:"Kiri",am:"ግራ",or:"Bitaa",sw:"Kushoto",lg:"Kkono",so:"Bidix",bn:"বাম",hi:"बाएं",fr:"Gauche"} },
-                    { id:110, ar:"قريب", pron:"Gareeb", np:{am:"ጋሪብ",bn:"গারিব",hi:"गरीब"}, t:{en:"Near",ph:"Malapit",id:"Dekat",am:"ቅርብ",or:"Dhihoo",sw:"Karibu",lg:"Kumpi",so:"Dhow",bn:"কাছে",hi:"पास",fr:"Près"} },
-                    { id:111, ar:"بعيد", pron:"Ba'eed", np:{am:"ባዒድ",bn:"বায়েد",hi:"बईद"}, t:{en:"Far",ph:"Malayo",id:"Jauh",am:"ሩቅ",or:"Fago",sw:"Mbali",lg:"Wala",so:"Fog",bn:"দূরে",hi:"दूर",fr:"Loin"} },
-                    { id:112, ar:"هنا", pron:"Hina", np:{am:"ሂና",bn:"হিনা",hi:"हिना"}, t:{en:"Here",ph:"Dito",id:"Sini",am:"እዚህ",or:"As",sw:"Hapa",lg:"Wano",so:"Halkan",bn:"এখানে",hi:"यहाँ",fr:"Ici"} },
-                    { id:113, ar:"هناك", pron:"Hinak", np:{am:"ሂናክ",bn:"হیناک",hi:"हिनाक"}, t:{en:"There",ph:"Doon",id:"Sana",am:"እዚያ",or:"Achi",sw:"Pale",lg:"Eri",so:"Halkaas",bn:"ওখানে",hi:"वहाँ",fr:"Là-bas"} },
-                    { id:114, ar:"بيت", pron:"Bait", np:{am:"ቤት",bn:"বাইত",hi:"बैत"}, t:{en:"House",ph:"Bahay",id:"Rumah",am:"ቤት",or:"Mana",sw:"Nyumba",lg:"Enyumba",so:"Guri",bn:"বাড়ি",hi:"घर",fr:"Maison"} },
-                    { id:115, ar:"غرفة", pron:"Ghurfah", np:{am:"ጉርፋ",bn:"গুরফা",hi:"ग़ुरफ़ा"}, t:{en:"Room",ph:"Kwarto",id:"Kamar",am:"ክፍል",or:"Kutaa",sw:"Chumba",lg:"Ekisenge",so:"Qol",bn:"রুম",hi:"कमरा",fr:"Chambre"} },
-                    { id:116, ar:"صالة", pron:"Salah", np:{am:"ሳላ",bn:"সালাহ",hi:"सालाह"}, t:{en:"Living room",ph:"Sala",id:"Ruang tamu",am:"ሳሎን",or:"Saalaa",sw:"Sebule",lg:"Esalo",so:"Fadhi",bn:"বসার ঘর",hi:"बैठक",fr:"Salon"} },
-                    { id:117, ar:"مطبخ", pron:"Matbakh", np:{am:"ማጥባክ",bn:"মাতবাখ",hi:"मतबख"}, t:{en:"Kitchen",ph:"Kusina",id:"Dapur",am:"ወጥ ቤት",or:"Kushinaa",sw:"Jikoni",lg:"Effumbiro",so:"Jikada",bn:"রান্নাঘর",hi:"रसोई",fr:"Cuisine"} },
-                    { id:118, ar:"حمام", pron:"Hammam", np:{am:"ሀማም",bn:"হাম্মাম",hi:"हम्माम"}, t:{en:"Bathroom",ph:"Banyo",id:"Kamar mandi",am:"መጸዳጃ",or:"Fincaanii",sw:"Bafu",lg:"Kiyigo",so:"Suuliga",bn:"বাথরুম",hi:"बाथरूम",fr:"SDB"} },
-                    { id:119, ar:"حوش", pron:"Hosh", np:{am:"ሆሽ",bn:"হোশ",hi:"होश"}, t:{en:"Yard",ph:"Bakuran",id:"Halaman",am:"ግቢ",or:"Oobdii",sw:"Ua",lg:"Oluja",so:"Hool",bn:"উঠান",hi:"आँगन",fr:"Cour"} },
-                    { id:120, ar:"سطح", pron:"Sath", np:{am:"ሳጥህ",bn:"সাতহ",hi:"सतह"}, t:{en:"Roof",ph:"Bubong",id:"Atap",am:"ጣሪያ",or:"Baaxaa",sw:"Paa",lg:"Kasolya",so:"Saqafka",bn:"ছাদ",hi:"छत",fr:"Toit"} },
-                    { id:121, ar:"سوق", pron:"Soog", np:{am:"ሱግ",bn:"সুগ",hi:"सूग"}, t:{en:"Market",ph:"Palengke",id:"Pasar",am:"ገበያ",or:"Gabaa",sw:"Soko",lg:"Akatale",so:"Suuq",bn:"বাজার",hi:"बाज़ार",fr:"Marché"} },
-                    { id:122, ar:"مستشفى", pron:"Mustashfa", np:{am:"ሙስታሽፋ",bn:"মুसताشفا",hi:"मुस्तश्फा"}, t:{en:"Hospital",ph:"Ospital",id:"Rumah sakit",am:"ሆስፒታል",or:"Hospitaala",sw:"Hospitali",lg:"Eddwaliro",so:"Isbitaal",bn:"হাসপাতাল",hi:"अस्पताल",fr:"Hôpital"} }
+                    { id:101, ar:"فوق", pr:"Fog", np:{am:"ፎግ",bn:"ফোগ",hi:"फोग"}, t:{en:"Up",ph:"Taas",id:"Atas",am:"ላይ",or:"Gubbaa",sw:"Juu",lg:"Wagulu",so:"Kor",bn:"উপরে",hi:"ऊपर",fr:"Haut"} },
+                    { id:102, ar:"تحت", pr:"Taht", np:{am:"ታህት",bn:"তাহত",hi:"ताहत"}, t:{en:"Down",ph:"Baba",id:"Bawah",am:"ታች",or:"Jala",sw:"Chini",lg:"Wansi",so:"Hoos",bn:"নিচে",hi:"नीचे",fr:"Bas"} },
+                    { id:103, ar:"جنب", pr:"Janb", np:{am:"ጃንብ",bn:"জানব",hi:"जंब"}, t:{en:"Beside",ph:"Tabi",id:"Samping",am:"አጠገብ",or:"Cinaa",sw:"Kando",lg:"Kumpi",so:"Agteeda",bn:"পাশে",hi:"बगल में",fr:"À côté"} },
+                    { id:104, ar:"قدام", pr:"Giddam", np:{am:"ጊዳም",bn:"গিদ্দাম",hi:"गिद्दाम"}, t:{en:"In front",ph:"Harap",id:"Depan",am:"ፊት",or:"Fuuldura",sw:"Mbele",lg:"Mumaaso",so:"Horta",bn:"সামনে",hi:"सामने",fr:"Devant"} },
+                    { id:105, ar:"ورا", pr:"Wara", np:{am:"ዋራ",bn:"ওয়ারা",hi:"वरा"}, t:{en:"Behind",ph:"Likod",id:"Belakang",am:"ኋላ",or:"Duuba",sw:"Nyuma",lg:"Mabega",so:"Gadaal",bn:"পেছনে",hi:"पीछे",fr:"Derrière"} },
+                    { id:106, ar:"داخل", pr:"Dakhil", np:{am:"ዳኺል",bn:"দাখিল",hi:"दाखिल"}, t:{en:"Inside",ph:"Loob",id:"Dalam",am:"ውስጥ",or:"Keessa",sw:"Ndani",lg:"Munda",so:"Gudaha",bn:"ভেতরে",hi:"अंदर",fr:"Dedans"} },
+                    { id:107, ar:"برا", pr:"Barra", np:{am:"ባራ",bn:"বাররা",hi:"बर्रा"}, t:{en:"Outside",ph:"Labas",id:"Luar",am:"ውጭ",or:"Alatti",sw:"Nje",lg:"Wabweru",so:"Bannaanka",bn:"বাইরে",hi:"बाहर",fr:"Dehors"} },
+                    { id:108, ar:"يمين", pr:"Yameen", np:{am:"ያሚን",bn:"ইয়ামিন",hi:"यमीन"}, t:{en:"Right",ph:"Kanan",id:"Kanan",am:"ቀኝ",or:"Mirga",sw:"Kulia",lg:"Ddyo",so:"Midig",bn:"ডান",hi:"दाएं",fr:"Droite"} },
+                    { id:109, ar:"يسار", pr:"Yasar", np:{am:"ያሳር",bn:"ইয়াসার",hi:"यसार"}, t:{en:"Left",ph:"Kaliwa",id:"Kiri",am:"ግራ",or:"Bitaa",sw:"Kushoto",lg:"Kkono",so:"Bidix",bn:"বাম",hi:"बाएं",fr:"Gauche"} },
+                    { id:110, ar:"قريب", pr:"Gareeb", np:{am:"ጋሪብ",bn:"গারিব",hi:"गरीब"}, t:{en:"Near",ph:"Malapit",id:"Dekat",am:"ቅርብ",or:"Dhihoo",sw:"Karibu",lg:"Kumpi",so:"Dhow",bn:"কাছে",hi:"पास",fr:"Près"} },
+                    { id:111, ar:"بعيد", pr:"Ba'eed", np:{am:"ባዒድ",bn:"বায়েد",hi:"बईद"}, t:{en:"Far",ph:"Malayo",id:"Jauh",am:"ሩቅ",or:"Fago",sw:"Mbali",lg:"Wala",so:"Fog",bn:"দূরে",hi:"दूर",fr:"Loin"} },
+                    { id:112, ar:"هنا", pr:"Hina", np:{am:"ሂና",bn:"হينا",hi:"हिना"}, t:{en:"Here",ph:"Dito",id:"Sini",am:"እዚህ",or:"As",sw:"Hapa",lg:"Wano",so:"Halkan",bn:"এখানে",hi:"यहाँ",fr:"Ici"} },
+                    { id:113, ar:"هناك", pr:"Hinak", np:{am:"ሂናክ",bn:"হিনাক",hi:"हिनाक"}, t:{en:"There",ph:"Doon",id:"Sana",am:"እዚያ",or:"Achi",sw:"Pale",lg:"Eri",so:"Halkaas",bn:"ওখানে",hi:"वहाँ",fr:"Là-bas"} },
+                    { id:114, ar:"بيت", pr:"Bait", np:{am:"ቤት",bn:"বাইত",hi:"बैत"}, t:{en:"House",ph:"Bahay",id:"Rumah",am:"ቤት",or:"Mana",sw:"Nyumba",lg:"Enyumba",so:"Guri",bn:"বাড়ি",hi:"घर",fr:"Maison"} },
+                    { id:115, ar:"غرفة", pr:"Ghurfah", np:{am:"ጉርፋ",bn:"গুরফা",hi:"ग़ुरफ़ा"}, t:{en:"Room",ph:"Kwarto",id:"Kamar",am:"ክፍል",or:"Kutaa",sw:"Chumba",lg:"Ekisenge",so:"Qol",bn:"রুম",hi:"कमरा",fr:"Chambre"} },
+                    { id:116, ar:"صالة", pr:"Salah", np:{am:"ሳላ",bn:"সালাহ",hi:"सालाह"}, t:{en:"Living room",ph:"Sala",id:"Ruang tamu",am:"ሳሎን",or:"Saalaa",sw:"Sebule",lg:"Esalo",so:"Fadhi",bn:"বসার ঘর",hi:"बैठक",fr:"Salon"} },
+                    { id:117, ar:"مطبخ", pr:"Matbakh", np:{am:"ማጥባክ",bn:"মাতবাখ",hi:"मतबख"}, t:{en:"Kitchen",ph:"Kusina",id:"Dapur",am:"ወጥ ቤት",or:"Kushinaa",sw:"Jikoni",lg:"Effumbiro",so:"Jikada",bn:"রান্নাঘর",hi:"रसोई",fr:"Cuisine"} },
+                    { id:118, ar:"حمام", pr:"Hammam", np:{am:"ሀማም",bn:"হাম্মাম",hi:"हम्माम"}, t:{en:"Bathroom",ph:"Banyo",id:"Kamar mandi",am:"መጸዳጃ",or:"Fincaanii",sw:"Bafu",lg:"Kiyigo",so:"Suuliga",bn:"বাথরুম",hi:"बाथरूम",fr:"SDB"} },
+                    { id:119, ar:"حوش", pr:"Hosh", np:{am:"ሆሽ",bn:"হোশ",hi:"होश"}, t:{en:"Yard",ph:"Bakuran",id:"Halaman",am:"ግቢ",or:"Oobdii",sw:"Ua",lg:"Oluja",so:"Hool",bn:"উঠান",hi:"आँगन",fr:"Cour"} },
+                    { id:120, ar:"سطح", pr:"Sath", np:{am:"ሳጥህ",bn:"সাতহ",hi:"सतह"}, t:{en:"Roof",ph:"Bubong",id:"Atap",am:"ጣሪያ",or:"Baaxaa",sw:"Paa",lg:"Kasolya",so:"Saqafka",bn:"ছাদ",hi:"छत",fr:"Toit"} },
+                    { id:121, ar:"سوق", pr:"Soog", np:{am:"ሱግ",bn:"সুগ",hi:"सूग"}, t:{en:"Market",ph:"Palengke",id:"Pasar",am:"ገበያ",or:"Gabaa",sw:"Soko",lg:"Akatale",so:"Suuq",bn:"বাজার",hi:"बाज़ार",fr:"Marché"} },
+                    { id:122, ar:"مستشفى", pr:"Mustashfa", np:{am:"ሙስታሽፋ",bn:"মুসताشفا",hi:"मुस्तश्फा"}, t:{en:"Hospital",ph:"Ospital",id:"Rumah sakit",am:"ሆስፒታል",or:"Hospitaala",sw:"Hospitali",lg:"Eddwaliro",so:"Isbitaal",bn:"হাসপাতাল",hi:"अस्पताल",fr:"Hôpital"} }
                 ]
             },
             {
                 category: "🔗 الربط والاستفهام",
                 transCat: { en:"Connectors/Questions", ph:"Pang-ugnay/Tanong", id:"Kata Sambung", am:"አያያዦች/ጥያቄ", or:"Gaaffiilee", sw:"Viunganishi", lg:"Ebibuuzo", so:"Su'aalaha", bn:"সংযোজক", hi:"योजक", fr:"Connecteurs" },
                 words: [
-                    { id:201, ar:"في", pron:"Fi", np:{am:"ፊ",bn:"ফি",hi:"फी"}, t:{en:"In",ph:"Sa",id:"Di",am:"በ",or:"Keessa",sw:"Ndani",lg:"Mu",so:"Gudaha",bn:"তে",hi:"में",fr:"Dans"} },
-                    { id:202, ar:"على", pron:"Ala", np:{am:"አላ",bn:"আላ",hi:"अला"}, t:{en:"On",ph:"Sa ibabaw",id:"Atas",am:"ላይ",or:"Irra",sw:"Juu",lg:"Ku",so:"Dusha",bn:"উপরে",hi:"पर",fr:"Sur"} },
-                    { id:203, ar:"مع", pron:"Ma'a", np:{am:"ማዓ",bn:"ማআ",hi:"ማआ"}, t:{en:"With",ph:"Kasama",id:"Dengan",am:"ከ",or:"Wajjin",sw:"Pamoja",lg:"Ne",so:"La",bn:"সাথে",hi:"साथ",fr:"Avec"} },
-                    { id:204, ar:"بدون", pron:"Bidoon", np:{am:"ቢዱን",bn:"বিদুন",hi:"बिदून"}, t:{en:"Without",ph:"Wala",id:"Tanpa",am:"ያለ",or:"Malee",sw:"Bila",lg:"Awata",so:"La'aan",bn:"ছাড়া",hi:"बिना",fr:"Sans"} },
-                    { id:205, ar:"مثل", pron:"Mithil", np:{am:"ሚትል",bn:"মিথিল",hi:"मिथिल"}, t:{en:"Like",ph:"Tulad",id:"Sama",am:"እንደ",or:"Akka",sw:"Sawa",lg:"Nga",so:"Sida",bn:"একই",hi:"जैसा",fr:"Comme"} },
-                    { id:206, ar:"بس", pron:"Bas", np:{am:"በስ",bn:"বাস",hi:"बस"}, t:{en:"Only",ph:"Lang",id:"Hanya",am:"ግን",or:"Garuu",sw:"Tu",lg:"Naye",so:"Keliya",bn:"শুধু",hi:"सिर्फ",fr:"Seulement"} },
-                    { id:207, ar:"عشان", pron:"Ashan", np:{am:"አሻን",bn:"আশান",hi:"अशान"}, t:{en:"Because",ph:"Dahil",id:"Karena",am:"ስለዚህ",or:"Sababiin",sw:"Kwa sababu",lg:"Kubanga",so:"Sababtoo ah",bn:"কারণ",hi:"क्योंकि",fr:"Parce que"} },
-                    { id:208, ar:"هذا", pron:"Hatha", np:{am:"ሃዛ",bn:"হাজা",hi:"हाज़ा"}, t:{en:"This",ph:"Ito",id:"Ini",am:"ይህ",or:"Kana",sw:"Hiki",lg:"Kino",so:"Kan",bn:"এই",hi:"यह",fr:"Ce"} },
-                    { id:209, ar:"أنا", pron:"Ana", np:{am:"አና",bn:"আনা",hi:"अना"}, t:{en:"I",ph:"Ako",id:"Saya",am:"እኔ",or:"Ana",sw:"Mimi",lg:"Nze",so:"Aniga",bn:"আমি",hi:"मैं",fr:"Je"} },
-                    { id:210, ar:"أنتِ", pron:"Inti", np:{am:"እንቲ",bn:"ইন্তি",hi:"इन्ती"}, t:{en:"You",ph:"Ikaw",id:"Kamu",am:"አንቺ",or:"Ati",sw:"Wewe",lg:"Gwe",so:"Adiga",bn:"তুমি",hi:"तुम",fr:"Tu"} },
-                    { id:211, ar:"إحنا", pron:"Ihna", np:{am:"ኢህና",bn:"ইহনা",hi:"इहना"}, t:{en:"We",ph:"Tayo",id:"Kita",am:"እኛ",or:"Nuti",sw:"Sisi",lg:"Ffe",so:"Annaga",bn:"আমরা",hi:"हम",fr:"Nous"} },
-                    { id:212, ar:"متى؟", pron:"Mata?", np:{am:"መታ?",bn:"মাতা?",hi:"मता?"}, t:{en:"When?",ph:"Kailan?",id:"Kapan?",am:"መቼ?",or:"Yoom?",sw:"Lini?",lg:"Ddi?",so:"Goorma?",bn:"কখন?",hi:"कब?",fr:"Quand?"} },
-                    { id:213, ar:"وين؟", pron:"Wain?", np:{am:"ዌን?",bn:"ওয়েন?",hi:"वैन?"}, t:{en:"Where?",ph:"Saan?",id:"Di mana?",am:"የት?",or:"Eessa?",sw:"Wapi?",lg:"Wa?",so:"Halkee?",bn:"কোথায়?",hi:"कहाँ?",fr:"Où?"} },
-                    { id:214, ar:"كيف؟", pron:"Kaif?", np:{am:"ኬፍ?",bn:"কাইফ?",hi:"कैफ़?"}, t:{en:"How?",ph:"Paano?",id:"Bagaimana?",am:"እንዴት?",or:"Akkam?",sw:"Vipi?",lg:"Atya?",so:"Sidee?",bn:"কিভাবে?",hi:"कैसे?",fr:"Comment?"} },
-                    { id:215, ar:"ليش؟", pron:"Laish?", np:{am:"ሌሽ?",bn:"লাইশ?",hi:"लैश्?"}, t:{en:"Why?",ph:"Bakit?",id:"Kenapa?",am:"ለምን?",or:"Maaliif?",sw:"Kwa nini?",lg:"Lwaki?",so:"Maxaa yeelay?",bn:"কেন?",hi:"क्यों?",fr:"Pourquoi?"} },
-                    { id:216, ar:"مين؟", pron:"Meen?", np:{am:"ሚን?",bn:"মিন?",hi:"मीन?"}, t:{en:"Who?",ph:"Sino?",id:"Siapa?",am:"ማን?",or:"Eenyu?",sw:"Nani?",lg:"Ani?",so:"Yaa?",bn:"কে?",hi:"कौन?",fr:"Qui?"} }
+                    { id:201, ar:"في", pr:"Fi", np:{am:"ፊ",bn:"ফি",hi:"फी"}, t:{en:"In",ph:"Sa",id:"Di",am:"በ",or:"Keessa",sw:"Ndani",lg:"Mu",so:"Gudaha",bn:"তে",hi:"में",fr:"Dans"} },
+                    { id:202, ar:"على", pr:"Ala", np:{am:"አላ",bn:"আላ",hi:"अला"}, t:{en:"On",ph:"Sa ibabaw",id:"Atas",am:"ላይ",or:"Irra",sw:"Juu",lg:"Ku",so:"Dusha",bn:"উপরে",hi:"पर",fr:"Sur"} },
+                    { id:203, ar:"مع", pr:"Ma'a", np:{am:"ማዓ",bn:"ማআ",hi:"ማआ"}, t:{en:"With",ph:"Kasama",id:"Dengan",am:"ከ",or:"Wajjin",sw:"Pamoja",lg:"Ne",so:"La",bn:"সাথে",hi:"साथ",fr:"Avec"} },
+                    { id:204, ar:"بدون", pr:"Bidoon", np:{am:"ቢዱን",bn:"বিদুন",hi:"बिदून"}, t:{en:"Without",ph:"Wala",id:"Tanpa",am:"ያለ",or:"Malee",sw:"Bila",lg:"Awata",so:"La'aan",bn:"ছাড়া",hi:"बिना",fr:"Sans"} },
+                    { id:205, ar:"مثل", pr:"Mithil", np:{am:"ሚትል",bn:"মিথিল",hi:"मिथिल"}, t:{en:"Like",ph:"Tulad",id:"Sama",am:"እንደ",or:"Akka",sw:"Sawa",lg:"Nga",so:"Sida",bn:"একই",hi:"जैसा",fr:"Comme"} },
+                    { id:206, ar:"بس", pr:"Bas", np:{am:"በስ",bn:"বাস",hi:"बस"}, t:{en:"Only",ph:"Lang",id:"Hanya",am:"ግን",or:"Garuu",sw:"Tu",lg:"Naye",so:"Keliya",bn:"শুধু",hi:"सिर्फ",fr:"Seulement"} },
+                    { id:207, ar:"عشان", pr:"Ashan", np:{am:"አሻን",bn:"আশান",hi:"अशान"}, t:{en:"Because",ph:"Dahil",id:"Karena",am:"ስለዚህ",or:"Sababiin",sw:"Kwa sababu",lg:"Kubanga",so:"Sababtoo ah",bn:"কারণ",hi:"क्योंकि",fr:"Parce que"} },
+                    { id:208, ar:"هذا", pr:"Hatha", np:{am:"ሃዛ",bn:"হাজা",hi:"हाज़ा"}, t:{en:"This",ph:"Ito",id:"Ini",am:"ይህ",or:"Kana",sw:"Hiki",lg:"Kino",so:"Kan",bn:"এই",hi:"यह",fr:"Ce"} },
+                    { id:209, ar:"أنا", pr:"Ana", np:{am:"አና",bn:"আনা",hi:"अना"}, t:{en:"I",ph:"Ako",id:"Saya",am:"እኔ",or:"Ana",sw:"Mimi",lg:"Nze",so:"Aniga",bn:"আমি",hi:"मैं",fr:"Je"} },
+                    { id:210, ar:"أنتِ", pr:"Inti", np:{am:"እንቲ",bn:"ইন্তি",hi:"इन्ती"}, t:{en:"You",ph:"Ikaw",id:"Kamu",am:"አንቺ",or:"Ati",sw:"Wewe",lg:"Gwe",so:"Adiga",bn:"তুমি",hi:"तुम",fr:"Tu"} },
+                    { id:211, ar:"إحنا", pr:"Ihna", np:{am:"ኢህና",bn:"ইহনা",hi:"इहना"}, t:{en:"We",ph:"Tayo",id:"Kita",am:"እኛ",or:"Nuti",sw:"Sisi",lg:"Ffe",so:"Annaga",bn:"আমরা",hi:"हम",fr:"Nous"} },
+                    { id:212, ar:"متى؟", pr:"Mata?", np:{am:"መታ?",bn:"মাতা?",hi:"मता?"}, t:{en:"When?",ph:"Kailan?",id:"Kapan?",am:"መቼ?",or:"Yoom?",sw:"Lini?",lg:"Ddi?",so:"Goorma?",bn:"কখন?",hi:"कब?",fr:"Quand?"} },
+                    { id:213, ar:"وين؟", pr:"Wain?", np:{am:"ዌን?",bn:"ওয়েন?",hi:"वैन?"}, t:{en:"Where?",ph:"Saan?",id:"Di mana?",am:"የት?",or:"Eessa?",sw:"Wapi?",lg:"Wa?",so:"Halkee?",bn:"কোথায়?",hi:"कहाँ?",fr:"Où?"} },
+                    { id:214, ar:"كيف؟", pr:"Kaif?", np:{am:"ኬፍ?",bn:"কাইফ?",hi:"कैफ़?"}, t:{en:"How?",ph:"Paano?",id:"Bagaimana?",am:"እንዴት?",or:"Akkam?",sw:"Vipi?",lg:"Atya?",so:"Sidee?",bn:"কিভাবে?",hi:"कैसे?",fr:"Comment?"} },
+                    { id:215, ar:"ليش؟", pr:"Laish?", np:{am:"ሌሽ?",bn:"লাইশ?",hi:"लैश्?"}, t:{en:"Why?",ph:"Bakit?",id:"Kenapa?",am:"ለምን?",or:"Maaliif?",sw:"Kwa nini?",lg:"Lwaki?",so:"Maxaa yeelay?",bn:"কেন?",hi:"क्यों?",fr:"Pourquoi?"} },
+                    { id:216, ar:"مين؟", pr:"Meen?", np:{am:"ሚን?",bn:"মিন?",hi:"मीन?"}, t:{en:"Who?",ph:"Sino?",id:"Siapa?",am:"ማን?",or:"Eenyu?",sw:"Nani?",lg:"Ani?",so:"Yaa?",bn:"কে?",hi:"कौन?",fr:"Qui?"} }
                 ]
             },
             {
                 category: "⚖️ الكمية والوقت",
                 transCat: { en:"Quantity & Time", ph:"Dami at Oras", id:"Kuantitas & Waktu", am:"ብዛት እና ጊዜ", or:"Baay'ina", sw:"Wingi & Wakati", lg:"Obudde", so:"Tirada/Waqti", bn:"পরিমাণ/সময়", hi:"मात्रा/समय", fr:"Quantité/Temps" },
                 words: [
-                    { id:301, ar:"شوي", pron:"Shway", np:{am:"ሽዋይ",bn:"শোয়াই",hi:"शवाय"}, t:{en:"A little",ph:"Konti",id:"Sedikit",am:"ትንሽ",or:"Xinnoo",sw:"Kidogo",lg:"Kitono",so:"Yar",bn:"একটু",hi:"थोड़ा",fr:"Un peu"} },
-                    { id:302, ar:"كثير", pron:"Katheer", np:{am:"ካቲር",bn:"কাথির",hi:"कसीर"}, t:{en:"A lot",ph:"Marami",id:"Banyak",am:"ብዙ",or:"Baay'ee",sw:"Nyingi",lg:"Nnyo",so:"Badan",bn:"অনেক",hi:"बहुत",fr:"Beaucoup"} },
-                    { id:303, ar:"زيادة", pron:"Ziyadah", np:{am:"ዚያዳ",bn:"জিয়াদা",hi:"ज़ियादा"}, t:{en:"More",ph:"Dagdag",id:"Tambah",am:"ተጨማሪ",or:"Dabalata",sw:"Zaidi",lg:"Mwongere",so:"Dheeraad",bn:"বেশি",hi:"ज़्यादा",fr:"Plus"} },
-                    { id:304, ar:"ناقص", pron:"Nagis", np:{am:"ናጊስ",bn:"নাগিস",hi:"नागिस"}, t:{en:"Less",ph:"Kulang",id:"Kurang",am:"ጎደሎ",or:"Hir'uu",sw:"Pungufu",lg:"Kibulako",so:"Dhiman",bn:"কম",hi:"कम",fr:"Moins"} },
-                    { id:305, ar:"كله", pron:"Kulloh", np:{am:"ኩሎ",bn:"কুল্লু",hi:"कुल्लो"}, t:{en:"All",ph:"Lahat",id:"Semua",am:"ሁሉንም",or:"Hunda",sw:"Yote",lg:"Byonna",so:"Dhammaan",bn:"সব",hi:"सब",fr:"Tout"} },
-                    { id:306, ar:"نص", pron:"Nuss", np:{am:"ኑስ",bn:"নুস",hi:"नुस"}, t:{en:"Half",ph:"Kalahati",id:"Setengah",am:"ግማሽ",or:"Walakkaa",sw:"Nusu",lg:"Ekitundu",so:"Bar",bn:"অর্ধেক",hi:"आधा",fr:"Moitié"} },
-                    { id:307, ar:"فاضي", pron:"Fadhi", np:{am:"ፋዲ",bn:"ফাদি",hi:"फादी"}, t:{en:"Empty",ph:"Walang",id:"Kosong",am:"ባዶ",or:"Duwwaa",sw:"Tupu",lg:"Kikalu",so:"Madhan",bn:"খালি",hi:"खाली",fr:"Vide"} },
-                    { id:308, ar:"مليان", pron:"Malyan", np:{am:"ማልያን",bn:"মালয়ান",hi:"मलयान"}, t:{en:"Full",ph:"Puno",id:"Penuh",am:"ሙሉ",or:"Guutuu",sw:"Imejaa",lg:"Kijjudde",so:"Buuxa",bn:"ভর্তি",hi:"भरा",fr:"Plein"} },
-                    { id:309, ar:"أول", pron:"Awwal", np:{am:"አዋል",bn:"আওয়াল",hi:"अव्वल"}, t:{en:"First",ph:"Una",id:"Pertama",am:"መጀመሪያ",or:"Jalqaba",sw:"Kwanza",lg:"Gusooka",so:"Kow",bn:"প্রথম",hi:"पहला",fr:"Premier"} },
-                    { id:310, ar:"بعدين", pron:"Ba'adeen", np:{am:"ባዕዴን",bn:"বাদেন",hi:"बादैन"}, t:{en:"Later",ph:"Mamaya",id:"Nanti",am:"በኋላ",or:"Booda",sw:"Baadaye",lg:"Luvanyuma",so:"Kadib",bn:"পরে",hi:"बाद में",fr:"Plus tard"} },
-                    { id:311, ar:"الحين", pron:"Alhin", np:{am:"አልሂን",bn:"আলহین",hi:"अलहिन"}, t:{en:"Now",ph:"Ngayon",id:"Sekarang",am:"አሁን",or:"Amma",sw:"Sasa",lg:"Kati",so:"Hadda",bn:"এখন",hi:"अभी",fr:"Maintenant"} },
-                    { id:312, ar:"اليوم", pron:"Alyoum", np:{am:"አልዩም",bn:"আলইয়ুম",hi:"अल-यौम"}, t:{en:"Today",ph:"Ngayong",id:"Hari ini",am:"ዛሬ",or:"Har'a",sw:"Leo",lg:"Leero",so:"Maanta",bn:"আজ",hi:"आज",fr:"Aujourd'hui"} },
-                    { id:313, ar:"بكرة", pron:"Bokra", np:{am:"ቦክራ",bn:"বোকরা",hi:"बोकरा"}, t:{en:"Tomorrow",ph:"Bukas",id:"Besok",am:"ነገ",or:"Boru",sw:"Kesho",lg:"Enkya",so:"Berri",bn:"আগামীকাল",hi:"कल",fr:"Demain"} },
-                    { id:314, ar:"أمس", pron:"Ams", np:{am:"አምስ",bn:"আমস",hi:"अम्स"}, t:{en:"Yesterday",ph:"Kahapon",id:"Kemarin",am:"ትናንት",or:"Kaleessa",sw:"Jana",lg:"Jjo",so:"Shalay",bn:"গতকাল",hi:"कल",fr:"Hier"} },
-                    { id:315, ar:"صباح", pron:"Sabah", np:{am:"ሳባህ",bn:"সাবাহ",hi:"सबाह"}, t:{en:"Morning",ph:"Umaga",id:"Pagi",am:"ጠዋት",or:"Ganama",sw:"Asubuhi",lg:"Kumakya",so:"Subax",bn:"সকাল",hi:"सुबह",fr:"Matin"} },
-                    { id:316, ar:"ليل", pron:"Lail", np:{am:"ሌይል",bn:"লাইل",hi:"लैल"}, t:{en:"Night",ph:"Gabi",id:"Malam",am:"ማታ",or:"Halkan",sw:"Usiku",lg:"Kiro",so:"Habeen",bn:"রাত",hi:"रात",fr:"Nuit"} },
-                    { id:317, ar:"دايم", pron:"Dayim", np:{am:"ዳይም",bn:"দায়িম",hi:"दायिम"}, t:{en:"Always",ph:"Lagi",id:"Selalu",am:"ሁልጊዜ",or:"Yeroo hundaa",sw:"Daima",lg:"Bulijjo",so:"Had iyo jeer",bn:"সবসময়",hi:"हमेशा",fr:"Toujours"} }
+                    { id:301, ar:"شوي", pr:"Shway", np:{am:"ሽዋይ",bn:"শোয়াই",hi:"शवाय"}, t:{en:"A little",ph:"Konti",id:"Sedikit",am:"ትንሽ",or:"Xinnoo",sw:"Kidogo",lg:"Kitono",so:"Yar",bn:"একটু",hi:"थोड़ा",fr:"Un peu"} },
+                    { id:302, ar:"كثير", pr:"Katheer", np:{am:"ካቲር",bn:"কাথির",hi:"कसीर"}, t:{en:"A lot",ph:"Marami",id:"Banyak",am:"ብዙ",or:"Baay'ee",sw:"Nyingi",lg:"Nnyo",so:"Badan",bn:"অনেক",hi:"बहुत",fr:"Beaucoup"} },
+                    { id:303, ar:"زيادة", pr:"Ziyadah", np:{am:"ዚያዳ",bn:"জিয়াদা",hi:"ज़ियादा"}, t:{en:"More",ph:"Dagdag",id:"Tambah",am:"ተጨማሪ",or:"Dabalata",sw:"Zaidi",lg:"Mwongere",so:"Dheeraad",bn:"বেশি",hi:"ज़्यादा",fr:"Plus"} },
+                    { id:304, ar:"ناقص", pr:"Nagis", np:{am:"ናጊስ",bn:"নাগিস",hi:"नागিস"}, t:{en:"Less",ph:"Kulang",id:"Kurang",am:"ጎደሎ",or:"Hir'uu",sw:"Pungufu",lg:"Kibulako",so:"Dhiman",bn:"কম",hi:"कम",fr:"Moins"} },
+                    { id:305, ar:"كله", pr:"Kulloh", np:{am:"ኩሎ",bn:"কুল্লু",hi:"कुल्लो"}, t:{en:"All",ph:"Lahat",id:"Semua",am:"ሁሉንም",or:"Hunda",sw:"Yote",lg:"Byonna",so:"Dhammaan",bn:"সব",hi:"सब",fr:"Tout"} },
+                    { id:306, ar:"نص", pr:"Nuss", np:{am:"ኑስ",bn:"নুস",hi:"नुस"}, t:{en:"Half",ph:"Kalahati",id:"Setengah",am:"ግማሽ",or:"Walakkaa",sw:"Nusu",lg:"Ekitundu",so:"Bar",bn:"অর্ধেক",hi:"आधा",fr:"Moitié"} },
+                    { id:307, ar:"فاضي", pr:"Fadhi", np:{am:"ፋዲ",bn:"ফাদি",hi:"फादी"}, t:{en:"Empty",ph:"Walang",id:"Kosong",am:"ባዶ",or:"Duwwaa",sw:"Tupu",lg:"Kikalu",so:"Madhan",bn:"খালি",hi:"खाली",fr:"Vide"} },
+                    { id:308, ar:"مليان", pr:"Malyan", np:{am:"ማልያን",bn:"মালয়ান",hi:"मलयान"}, t:{en:"Full",ph:"Puno",id:"Penuh",am:"ሙሉ",or:"Guutuu",sw:"Imejaa",lg:"Kijjudde",so:"Buuxa",bn:"ভর্তি",hi:"भरा",fr:"Plein"} },
+                    { id:309, ar:"أول", pr:"Awwal", np:{am:"አዋል",bn:"আওয়াল",hi:"अव्वल"}, t:{en:"First",ph:"Una",id:"Pertama",am:"መጀመሪያ",or:"Jalqaba",sw:"Kwanza",lg:"Gusooka",so:"Kow",bn:"প্রথম",hi:"पहला",fr:"Premier"} },
+                    { id:310, ar:"بعدين", pr:"Ba'adeen", np:{am:"ባዕዴን",bn:"বাদেন",hi:"बादैन"}, t:{en:"Later",ph:"Mamaya",id:"Nanti",am:"በኋላ",or:"Booda",sw:"Baadaye",lg:"Luvanyuma",so:"Kadib",bn:"পরে",hi:"बाद में",fr:"Plus tard"} },
+                    { id:311, ar:"الحين", pr:"Alhin", np:{am:"አልሂን",bn:"আলহین",hi:"अलहिन"}, t:{en:"Now",ph:"Ngayon",id:"Sekarang",am:"አሁን",or:"Amma",sw:"Sasa",lg:"Kati",so:"Hadda",bn:"এখন",hi:"अभी",fr:"Maintenant"} },
+                    { id:312, ar:"اليوم", pr:"Alyoum", np:{am:"አልዩም",bn:"আলইয়ুম",hi:"अल-यौम"}, t:{en:"Today",ph:"Ngayong",id:"Hari ini",am:"ዛሬ",or:"Har'a",sw:"Leo",lg:"Leero",so:"Maanta",bn:"আজ",hi:"आज",fr:"Aujourd'hui"} },
+                    { id:313, ar:"بكرة", pr:"Bokra", np:{am:"ቦክራ",bn:"বোকরা",hi:"बोकरा"}, t:{en:"Tomorrow",ph:"Bukas",id:"Besok",am:"ነገ",or:"Boru",sw:"Kesho",lg:"Enkya",so:"Berri",bn:"আগামীকাল",hi:"कल",fr:"Demain"} },
+                    { id:314, ar:"أمس", pr:"Ams", np:{am:"አምስ",bn:"আমস",hi:"अम्स"}, t:{en:"Yesterday",ph:"Kahapon",id:"Kemarin",am:"ትናንት",or:"Kaleessa",sw:"Jana",lg:"Jjo",so:"Shalay",bn:"গতকাল",hi:"कल",fr:"Hier"} },
+                    { id:315, ar:"صباح", pr:"Sabah", np:{am:"ሳባህ",bn:"সাবাহ",hi:"सबाह"}, t:{en:"Morning",ph:"Umaga",id:"Pagi",am:"ጠዋት",or:"Ganama",sw:"Asubuhi",lg:"Kumakya",so:"Subax",bn:"সকাল",hi:"सुबह",fr:"Matin"} },
+                    { id:316, ar:"ليل", pr:"Lail", np:{am:"ሌይል",bn:"লাইل",hi:"लैल"}, t:{en:"Night",ph:"Gabi",id:"Malam",am:"ማታ",or:"Halkan",sw:"Usiku",lg:"Kiro",so:"Habeen",bn:"রাত",hi:"रात",fr:"Nuit"} },
+                    { id:317, ar:"دايم", pr:"Dayim", np:{am:"ዳይም",bn:"দায়িম",hi:"दायिम"}, t:{en:"Always",ph:"Lagi",id:"Selalu",am:"ሁልጊዜ",or:"Yeroo hundaa",sw:"Daima",lg:"Bulijjo",so:"Had iyo jeer",bn:"সবসময়",hi:"हमेशा",fr:"Toujours"} }
                 ]
             },
             {
                 category: "🔌 الأجهزة وأغراض المنزل",
                 transCat: { en:"Appliances & Items", ph:"Mga Kagamitan", id:"Peralatan & Barang", am:"መሳሪያዎች/እቃዎች", or:"Meeshaalee", sw:"Vifaa", lg:"Ebyuma", so:"Qalabka", bn:"যন্ত্রপাতি", hi:"उपकरण", fr:"Appareils" },
                 words: [
-                    { id:401, ar:"فرن", pron:"Furun", np:{am:"ፉሩን",bn:"ফুরুন",hi:"फुरुन"}, t:{en:"Oven",ph:"Oven",id:"Oven",am:"ኦቨን",or:"Ovanii",sw:"Oven",lg:"Oveni",so:"Foorno",bn:"ওভেন",hi:"ओवन",fr:"Four"} },
-                    { id:402, ar:"ميكروويف", pron:"Microwave", np:{am:"ማይክሮዌቭ",bn:"মাইক্রোওয়েভ",hi:"माइक्रोवेव"}, t:{en:"Microwave",ph:"Microwave",id:"Microwave",am:"ማይክሮዌቭ",or:"Maayikirooweevii",sw:"Microwave",lg:"Microwave",so:"Microwave",bn:"মাইক্রোওয়েভ",hi:"माइक्रोवेव",fr:"Micro-onde"} },
-                    { id:403, ar:"خلاط", pron:"Khallat", np:{am:"ኻላጥ",bn:"খাল্লাত",hi:"खल्लात"}, t:{en:"Blender",ph:"Blender",id:"Blender",am:"ብሌንደር",or:"Bilaandarii",sw:"Blenda",lg:"Bbulenda",so:"Makiinad",bn:"ব্লেন্ডার",hi:"मिक्सर",fr:"Mixeur"} },
-                    { id:404, ar:"غسالة", pron:"Ghassalah", np:{am:"ጋሳላ",bn:"গাসসাላ",hi:"गस्साला"}, t:{en:"Washing Machine",ph:"Washing machine",id:"Mesin cuci",am:"ማጠቢያ",or:"Meesha dhiquu",sw:"Mashine",lg:"Yoolya",so:"Mashiinka",bn:"মেশিন",hi:"वाशिंग मशीन",fr:"Lave-linge"} },
-                    { id:405, ar:"مكنسة", pron:"Miknasah", np:{am:"ሚክናሳ",bn:"মিকনাসা",hi:"मिकनासा"}, t:{en:"Vacuum",ph:"Vacuum",id:"Penyedot debu",am:"መጥረጊያ",or:"Haruu",sw:"Vuta vumbi",lg:"Ekyuma",so:"Nadiifiye",bn:"ভ্যাকুয়াম",hi:"वैक्यूम",fr:"Aspirateur"} },
-                    { id:406, ar:"مكيف", pron:"Mukayyaf", np:{am:"ሙካያፍ",bn:"মুকায়্যাফ",hi:"मुकय्यफ"}, t:{en:"AC",ph:"Aircon",id:"AC",am:"አየር ማቀዝቀዣ",or:"Qabbaneessaa",sw:"Koyozi",lg:"Ekyuma",so:"Qaboojiye",bn:"এসি",hi:"एसी",fr:"Clim"} },
-                    { id:407, ar:"ثلاجة", pron:"Thallajah", np:{am:"ታላጃ",bn:"থাল্লাজা",hi:"थल्लाजा"}, t:{en:"Fridge",ph:"Ref",id:"Kulkas",am:"ማቀዝቀዣ",or:"Firijii",sw:"Friji",lg:"Firiigi",so:"Tallaajad",bn:"ফ্রিজ",hi:"फ्रिज",fr:"Réfrigérateur"} },
-                    { id:408, ar:"تلفزيون", pron:"Televizion", np:{am:"ቴሌቪዥን",bn:"টেলিভিশন",hi:"टेलीविज़न"}, t:{en:"TV",ph:"TV",id:"TV",am:"ቴሌቪዥን",or:"TV",sw:"TV",lg:"TV",so:"TV",bn:"টিভি",hi:"टीवी",fr:"TV"} },
-                    { id:409, ar:"باب", pron:"Bab", np:{am:"ባብ",bn:"বাব",hi:"बाब"}, t:{en:"Door",ph:"Pinto",id:"Pintu",am:"በር",or:"Balbala",sw:"Mlango",lg:"Oluggi",so:"Albaab",bn:"দরজা",hi:"दरवाज़ा",fr:"Porte"} },
-                    { id:410, ar:"شباك", pron:"Shubbak", np:{am:"ሹባክ",bn:"শুব্বাক",hi:"शुब्लाक"}, t:{en:"Window",ph:"Bintana",id:"Jendela",am:"መስኮት",or:"Foddaa",sw:"Dirisha",lg:"Ddirisa",so:"Daaqad",bn:"জানালা",hi:"खिड़की",fr:"Fenêtre"} },
-                    { id:411, ar:"غلاية", pron:"Ghallayah", np:{am:"ጋላያ",bn:"গাল্লায়া",hi:"गल्लाया"}, t:{en:"Kettle",ph:"Takure",id:"Teko",am:"ማፍያ",or:"Diste",sw:"Buli",lg:"Keti",so:"Kilig",bn:"কেটলি",hi:"केतली",fr:"Bouilloire"} },
-                    { id:412, ar:"لمبة", pron:"Lambah", np:{am:"ላምባ",bn:"লাম্বা",hi:"लम्बा"}, t:{en:"Light",ph:"Ilaw",id:"Lampu",am:"መብራት",or:"Ibsaa",sw:"Taa",lg:"Ettaala",so:"Nal",bn:"আলো",hi:"बत्ती",fr:"Lumière"} },
-                    { id:413, ar:"سرير", pron:"Sareer", np:{am:"ሳሪር",bn:"সারির",hi:"सरीर"}, t:{en:"Bed",ph:"Kama",id:"Tempat tidur",am:"አልጋ",or:"Siree",sw:"Kitanda",lg:"Ekitanda",so:"Sariir",bn:"বিছানা",hi:"बिस्तर",fr:"Lit"} },
-                    { id:414, ar:"بطانية", pron:"Battaniyah", np:{am:"ባጣኒያ",bn:"বাত্তানিয়া",hi:"बत्तानिय्या"}, t:{en:"Blanket",ph:"Kumot",id:"Selimut",am:"ብርድ ልብስ",or:"Burtuyyaa",sw:"Blanketi",lg:"Bbulangiti",so:"Busto",bn:"কম্বল",hi:"कंबल",fr:"Couverture"} },
-                    { id:415, ar:"طاولة", pron:"Tawlah", np:{am:"ጣውላ",bn:"তাওলা",hi:"तावला"}, t:{en:"Table",ph:"Lamesa",id:"Meja",am:"ጠረጴዛ",or:"Minjaala",sw:"Meza",lg:"Emeeza",so:"Miis",bn:"টেবিল",hi:"मेज",fr:"Table"} },
-                    { id:416, ar:"كرسي", pron:"Kursi", np:{am:"ኩርሲ",bn:"কুরসি",hi:"कुर्सी"}, t:{en:"Chair",ph:"Upuan",id:"Kursi",am:"ወንበር",or:"Barchuma",sw:"Kiti",lg:"Entebe",so:"Kursi",bn:"চেয়ার",hi:"कुर्सी",fr:"Chaise"} },
-                    { id:417, ar:"دولاب", pron:"Dolab", np:{am:"ዶላብ",bn:"দোলাব",hi:"दोलाब"}, t:{en:"Closet",ph:"Aparador",id:"Lemari",am:"ቁም ሳጥን",or:"Kabardii",sw:"Kabati",lg:"Kabada",so:"Kabadh",bn:"আলমারি",hi:"अलमारी",fr:"Placard"} },
-                    { id:418, ar:"استشوار", pron:"Seshwar", np:{am:"ሰሽዋር",bn:"সেশওয়ার",hi:"सेशवार"}, t:{en:"Hair Dryer",ph:"Blower",id:"Pengering",am:"ማድረቂያ",or:"Diraayerii",sw:"Kikausha",lg:"Dulayya",so:"Qallajiye",bn:"ড্রায়ার",hi:"हेयर ड्रायर",fr:"Sèche-cheveux"} },
-                    { id:419, ar:"فيش", pron:"Feesh", np:{am:"ፊሽ",bn:"ফিশ",hi:"फ़ीश"}, t:{en:"Socket",ph:"Saksakan",id:"Stopkontak",am:"ሶኬት",or:"Sookkeettii",sw:"Soketi",lg:"Soketi",so:"Godka",bn:"সকেট",hi:"सॉकेट",fr:"Prise"} },
-                    { id:420, ar:"شاحن", pron:"Shahin", np:{am:"ሻሂን",bn:"शाहین",hi:"शाहिन"}, t:{en:"Charger",ph:"Charger",id:"Pengisi daya",am:"ቻርጀር",or:"Chaarjarii",sw:"Chaja",lg:"Caaja",so:"Dabeeye",bn:"চার্জার",hi:"चार्जर",fr:"Chargeur"} },
-                    { id:421, ar:"جوال", pron:"Jawal", np:{am:"ጃዋል",bn:"জাওয়াল",hi:"जवाल"}, t:{en:"Mobile",ph:"Cellphone",id:"Ponsel",am:"ሞባይል",or:"Moobaayila",sw:"Simu",lg:"Esimu",so:"Telefoon",bn:"মোবাইল",hi:"मोबाइल",fr:"Portable"} }
+                    { id:401, ar:"فرن", pr:"Furun", np:{am:"ፉሩን",bn:"ফুরুন",hi:"फुरुन"}, t:{en:"Oven",ph:"Oven",id:"Oven",am:"ኦቨን",or:"Ovanii",sw:"Oven",lg:"Oveni",so:"Foorno",bn:"ওভেন",hi:"ओवन",fr:"Four"} },
+                    { id:402, ar:"ميكروويف", pr:"Microwave", np:{am:"ማይክሮዌቭ",bn:"মাইক্রোওয়েভ",hi:"माइक्रोवेव"}, t:{en:"Microwave",ph:"Microwave",id:"Microwave",am:"ማይክሮዌቭ",or:"Maayikirooweevii",sw:"Microwave",lg:"Microwave",so:"Microwave",bn:"মাইক্রোওয়েভ",hi:"माइक्रोवेव",fr:"Micro-onde"} },
+                    { id:403, ar:"خلاط", pr:"Khallat", np:{am:"ኻላጥ",bn:"খাল্লাত",hi:"खल्लात"}, t:{en:"Blender",ph:"Blender",id:"Blender",am:"ብሌንደር",or:"Bilaandarii",sw:"Blenda",lg:"Bbulenda",so:"Makiinad",bn:"ব্লেন্ডার",hi:"मिक्सर",fr:"Mixeur"} },
+                    { id:404, ar:"غسالة", pr:"Ghassalah", np:{am:"ጋሳላ",bn:"গাসসাላ",hi:"गस्साला"}, t:{en:"Washing Machine",ph:"Washing machine",id:"Mesin cuci",am:"ማጠቢያ",or:"Meesha dhiquu",sw:"Mashine",lg:"Yoolya",so:"Mashiinka",bn:"মেশিন",hi:"वाशिंग मशीन",fr:"Lave-linge"} },
+                    { id:405, ar:"مكنسة", pr:"Miknasah", np:{am:"ሚክናሳ",bn:"মিকনাসা",hi:"मिकनासा"}, t:{en:"Vacuum",ph:"Vacuum",id:"Penyedot debu",am:"መጥረጊያ",or:"Haruu",sw:"Vuta vumbi",lg:"Ekyuma",so:"Nadiifiye",bn:"ভ্যাকুয়াম",hi:"वैक्यूम",fr:"Aspirateur"} },
+                    { id:406, ar:"مكيف", pr:"Mukayyaf", np:{am:"ሙካያፍ",bn:"মুকায়্যাফ",hi:"मुकय्यफ"}, t:{en:"AC",ph:"Aircon",id:"AC",am:"አየር ማቀዝቀዣ",or:"Qabbaneessaa",sw:"Koyozi",lg:"Ekyuma",so:"Qaboojiye",bn:"এসি",hi:"एसी",fr:"Clim"} },
+                    { id:407, ar:"ثلاجة", pr:"Thallajah", np:{am:"ታላጃ",bn:"থাল্লাজা",hi:"थल्लाजा"}, t:{en:"Fridge",ph:"Ref",id:"Kulkas",am:"ማቀዝቀዣ",or:"Firijii",sw:"Friji",lg:"Firiigi",so:"Tallaajad",bn:"ফ্রিজ",hi:"फ्रिज",fr:"Réfrigérateur"} },
+                    { id:408, ar:"تلفزيون", pr:"Televizion", np:{am:"ቴሌቪዥን",bn:"টেলিভিশন",hi:"टेलीविज़न"}, t:{en:"TV",ph:"TV",id:"TV",am:"ቴሌቪዥን",or:"TV",sw:"TV",lg:"TV",so:"TV",bn:"টিভি",hi:"टीवी",fr:"TV"} },
+                    { id:409, ar:"باب", pr:"Bab", np:{am:"ባብ",bn:"বাব",hi:"बाब"}, t:{en:"Door",ph:"Pinto",id:"Pintu",am:"በር",or:"Balbala",sw:"Mlango",lg:"Oluggi",so:"Albaab",bn:"দরজা",hi:"दरवाज़ा",fr:"Porte"} },
+                    { id:410, ar:"شباك", pr:"Shubbak", np:{am:"ሹባክ",bn:"শুব্বাক",hi:"शुब्लाक"}, t:{en:"Window",ph:"Bintana",id:"Jendela",am:"መስኮት",or:"Foddaa",sw:"Dirisha",lg:"Ddirisa",so:"Daaqad",bn:"জানালা",hi:"खिड़की",fr:"Fenêtre"} },
+                    { id:411, ar:"غلاية", pr:"Ghallayah", np:{am:"ጋላያ",bn:"গাল্লায়া",hi:"गल्लाया"}, t:{en:"Kettle",ph:"Takure",id:"Teko",am:"ማፍያ",or:"Diste",sw:"Buli",lg:"Keti",so:"Kilig",bn:"কেটলি",hi:"केतली",fr:"Bouilloire"} },
+                    { id:412, ar:"لمبة", pr:"Lambah", np:{am:"ላምባ",bn:"লাম্বা",hi:"लम्बा"}, t:{en:"Light",ph:"Ilaw",id:"Lampu",am:"መብራት",or:"Ibsaa",sw:"Taa",lg:"Ettaala",so:"Nal",bn:"আলো",hi:"बत्ती",fr:"Lumière"} },
+                    { id:413, ar:"سرير", pr:"Sareer", np:{am:"ሳሪር",bn:"সারির",hi:"सरीर"}, t:{en:"Bed",ph:"Kama",id:"Tempat tidur",am:"አልጋ",or:"Siree",sw:"Kitanda",lg:"Ekitanda",so:"Sariir",bn:"বিছানা",hi:"बिस्तर",fr:"Lit"} },
+                    { id:414, ar:"بطانية", pr:"Battaniyah", np:{am:"ባጣኒያ",bn:"বাত্তানিয়া",hi:"बत्तानिय्या"}, t:{en:"Blanket",ph:"Kumot",id:"Selimut",am:"ብርድ ልብስ",or:"Burtuyyaa",sw:"Blanketi",lg:"Bbulangiti",so:"Busto",bn:"কম্বল",hi:"कंबल",fr:"Couverture"} },
+                    { id:415, ar:"طاولة", pr:"Tawlah", np:{am:"ጣውላ",bn:"তাওলা",hi:"तावला"}, t:{en:"Table",ph:"Lamesa",id:"Meja",am:"ጠረጴዛ",or:"Minjaala",sw:"Meza",lg:"Emeeza",so:"Miis",bn:"টেবিল",hi:"मेज",fr:"Table"} },
+                    { id:416, ar:"كرسي", pr:"Kursi", np:{am:"ኩርሲ",bn:"কুরসি",hi:"कुर्सी"}, t:{en:"Chair",ph:"Upuan",id:"Kursi",am:"ወንበር",or:"Barchuma",sw:"Kiti",lg:"Entebe",so:"Kursi",bn:"চেয়ার",hi:"कुर्सी",fr:"Chaise"} },
+                    { id:417, ar:"دولاب", pr:"Dolab", np:{am:"ዶላብ",bn:"দোলাব",hi:"दोलाब"}, t:{en:"Closet",ph:"Aparador",id:"Lemari",am:"ቁም ሳጥን",or:"Kabardii",sw:"Kabati",lg:"Kabada",so:"Kabadh",bn:"আলমারি",hi:"अलमारी",fr:"Placard"} },
+                    { id:418, ar:"استشوار", pr:"Seshwar", np:{am:"ሰሽዋር",bn:"সেশওয়ার",hi:"सेशवार"}, t:{en:"Hair Dryer",ph:"Blower",id:"Pengering",am:"ማድረቂያ",or:"Diraayerii",sw:"Kikausha",lg:"Dulayya",so:"Qallajiye",bn:"ড্রায়ার",hi:"हेयर ड्रायर",fr:"Sèche-cheveux"} },
+                    { id:419, ar:"فيش", pr:"Feesh", np:{am:"ፊሽ",bn:"ফিশ",hi:"फ़ीश"}, t:{en:"Socket",ph:"Saksakan",id:"Stopkontak",am:"ሶኬት",or:"Sookkeettii",sw:"Soketi",lg:"Soketi",so:"Godka",bn:"সকেট",hi:"सॉकेट",fr:"Prise"} },
+                    { id:420, ar:"شاحن", pr:"Shahin", np:{am:"ሻሂን",bn:"शाहین",hi:"शाहिन"}, t:{en:"Charger",ph:"Charger",id:"Pengisi daya",am:"ቻርጀር",or:"Chaarjarii",sw:"Chaja",lg:"Caaja",so:"Dabeeye",bn:"চার্জার",hi:"चार्जर",fr:"Chargeur"} },
+                    { id:421, ar:"جوال", pr:"Jawal", np:{am:"ጃዋል",bn:"জাওয়াল",hi:"जवाल"}, t:{en:"Mobile",ph:"Cellphone",id:"Ponsel",am:"ሞባይል",or:"Moobaayila",sw:"Simu",lg:"Esimu",so:"Telefoon",bn:"মোবাইল",hi:"मोबाइल",fr:"Portable"} }
                 ]
             },
             {
                 category: "💬 أوامر وتعليمات الحـركة",
                 transCat: { en:"Commands & Actions", ph:"Utos at Kilos", id:"Perintah & Tindakan", am:"ትዕዛዞች/ድርጊቶች", or:"Ajaja", sw:"Amri", lg:"Ebiragiro", so:"Amarada", bn:"আদেশ", hi:"आदेश", fr:"Commandes" },
                 words: [
-                    { id:501, ar:"تعالي", pron:"Ta'ali", np:{am:"ታዓሊ",bn:"তায়ালি",hi:"ताआली"}, t:{en:"Come",ph:"Halika",id:"Sini",am:"ነይ",or:"Kottu",sw:"Njoo",lg:"Jangu",so:"Kaalay",bn:"এসো",hi:"आओ",fr:"Viens"} },
-                    { id:502, ar:"روحي", pron:"Roohi", np:{am:"ሩሂ",bn:"রুহি",hi:"रूही"}, t:{en:"Go",ph:"Punta",id:"Pergi",am:"ሂጂ",or:"Deemi",sw:"Nenda",lg:"Genda",so:"Tag",bn:"যাও",hi:"जाओ",fr:"Va"} },
-                    { id:503, ar:"جيبي", pron:"Jeebi", np:{am:"ጂቢ",bn:"জিবি",hi:"जीबी"}, t:{en:"Bring",ph:"Dalhin",id:"Bawa",am:"አምጪ",or:"Fidi",sw:"Leta",lg:"Leeta",so:"Keen",bn:"আনো",hi:"लाओ",fr:"Apporte"} },
-                    { id:504, ar:"ودي", pron:"Waddi", np:{am:"ዋዲ",bn:"ওয়াদ্দি",hi:"वद्दी"}, t:{en:"Take it",ph:"Dalhin",id:"Bawa",am:"ውሰጅ",or:"Geesi",sw:"Peleka",lg:"Twaala",so:"Gee",bn:"নিয়ে যাও",hi:"ले जाओ",fr:"Emmène"} },
-                    { id:505, ar:"بسرعة", pron:"Bsur'ah", np:{am:"ብሱርዓ",bn:"বসুরা",hi:"बसुरआ"}, t:{en:"Quickly",ph:"Mabilis",id:"Cepat",am:"በፍጥነት",or:"Dafii",sw:"Haraka",lg:"Mangu",so:"Dhaqso",bn:"তাড়াতাড়ি",hi:"जल्दी",fr:"Vite"} },
-                    { id:506, ar:"خلاص", pron:"Khalas", np:{am:"ኻላስ",bn:"খালাস",hi:"खलास"}, t:{en:"Finished",ph:"Tapos na",id:"Selesai",am:"አልቋል",or:"Xumure",sw:"Tayari",lg:"Kiwede",so:"Dhamaad",bn:"শেষ",hi:"खत्म",fr:"Fini"} },
-                    { id:507, ar:"فهمتي؟", pron:"Fhimti?", np:{am:"ፍሂምቲ",bn:"ফহিমতি",hi:"फहिमटी"}, t:{en:"Understand?",ph:"Naintindihan?",id:"Mengerti?",am:"ገባሽ?",or:"Sii galee?",sw:"Umeelewa?",lg:"Otegedde?",so:"Ma fahamtay?",bn:"বুঝেছো?",hi:"समझी?",fr:"Compris?"} },
-                    { id:508, ar:"نعم", pron:"Na'am", np:{am:"ነዓም",bn:"নাআম",hi:"नआम"}, t:{en:"Yes",ph:"Oo",id:"Ya",am:"አዎ",or:"Eeyyee",sw:"Ndiyo",lg:"Yee",so:"Haa",bn:"হ্যাঁ",hi:"हाँ",fr:"Oui"} },
-                    { id:509, ar:"لا", pron:"La", np:{am:"ላ",bn:"লা",hi:"ला"}, t:{en:"No",ph:"Hindi",id:"Tidak",am:"አይ",or:"Lakki",sw:"Hapana",lg:"Nedda",so:"Maya",bn:"না",hi:"नहीं",fr:"Non"} },
-                    { id:510, ar:"افتحي", pron:"Iftahi", np:{am:"ኢፍታሂ",bn:"ইফতাহী",hi:"इफ़ताही"}, t:{en:"Open",ph:"Buksan",id:"Buka",am:"ክፈት",or:"Bani",sw:"Fungua",lg:"Ggula",so:"Fur",bn:"খোলা",hi:"खोलना",fr:"Ouvrir"} },
-                    { id:511, ar:"سكري", pron:"Sakkiri", np:{am:"ሳኪሪ",bn:"সাক্কিরি",hi:"सक्किरी"}, t:{en:"Close",ph:"Isara",id:"Tutup",am:"ዝጋ",or:"Cufi",sw:"Funga",lg:"Ggala",so:"Xir",bn:"বন্ধ করা",hi:"बंद करना",fr:"Fermer"} },
-                    { id:512, ar:"شغلي", pron:"Shaghili", np:{am:"ሻጊሊ",bn:"শাগ্গিলি",hi:"शग्गिली"}, t:{en:"Turn on",ph:"Buhayin",id:"Nyalakan",am:"አብሪ",or:"Bani",sw:"Washa",lg:"Tekaako",so:"Daar",bn:"চালু কর",hi:"चालू करो",fr:"Allumer"} },
-                    { id:513, ar:"طفي", pron:"Taffi", np:{am:"ጣፊ",bn:"তাফফি",hi:"तफ्फी"}, t:{en:"Turn off",ph:"Patayin",id:"Matikan",am:"አጥፊ",or:"Dhaamsi",sw:"Zima",lg:"Ggalawo",so:"Dami",bn:"বন্ধ কর",hi:"बंद करो",fr:"Éteindre"} },
-                    { id:514, ar:"شيلي", pron:"Sheeli", np:{am:"ሺሊ",bn:"শিলি",hi:"शीली"}, t:{en:"Lift/Remove",ph:"Alisin",id:"Angkat",am:"አንሺ",or:"Fudhu",sw:"Ondoa",lg:"Gyawo",so:"Qaad",bn:"সরিয়ে নাও",hi:"हटाओ",fr:"Enlever"} },
-                    { id:515, ar:"حطي", pron:"Hutti", np:{am:"ሁጢ",bn:"হুত্তি",hi:"हुत्ती"}, t:{en:"Put",ph:"Ilagay",id:"Taruh",am:"አስቀምጪ",or:"Kaahi",sw:"Weka",lg:"Teeka",so:"Dhig",bn:"রাখো",hi:"रखो",fr:"Mettre"} },
-                    { id:516, ar:"نظفي", pron:"Nadhifi", np:{am:"ናዲፊ",bn:"নাদদিফি",hi:"नदीफी"}, t:{en:"Clean",ph:"Linisin",id:"Bersihkan",am:"አፅጂ",or:"Qulqulleessi",sw:"Safisha",lg:"Longoosa",so:"Nadiifi",bn:"পরিষ্কার কর",hi:"साफ करो",fr:"Nettoyer"} },
-                    { id:517, ar:"غسلي", pron:"Ghassili", np:{am:"ጋሲሊ",bn:"গাসসিলি",hi:"गसिली"}, t:{en:"Wash",ph:"Hugasan",id:"Cuci",am:"እጠቢ",or:"Dhiqi",sw:"Osha",lg:"Oza",so:"Dhaq",bn:"ধোও",hi:"धोओ",fr:"Laver"} },
-                    { id:518, ar:"انتظري", pron:"Intadhiri", np:{am:"ኢንታዚሪ",bn:"ইনতাজিরি",hi:"इंतज़िरी"}, t:{en:"Wait",ph:"Sandali",id:"Tunggu",am:"ጠብቂ",or:"Eegi",sw:"Subiri",lg:"Linda",so:"Sug",bn:"অপেক্ষা করা",hi:"इंतज़ार",fr:"Attendre"} },
-                    { id:519, ar:"اسمعي", pron:"Isma'i", np:{am:"ኢስማዒ",bn:"ইসমাঈ",hi:"इस्मयी"}, t:{en:"Listen",ph:"Makinig",id:"Dengar",am:"ስማ",or:"Dhagahi",sw:"Sikiliza",lg:"Wulira",so:"Dhageyso",bn:"শোন",hi:"सुनो",fr:"Écoute"} },
-                    { id:520, ar:"شوفي", pron:"Shoofi", np:{am:"ሹፊ",bn:"শুফি",hi:"शूफी"}, t:{en:"Look",ph:"Tingnan",id:"Lihat",am:"እይ",or:"Ilaali",sw:"Tazama",lg:"Laba",so:"Fiiri",bn:"দেখ",hi:"देखो",fr:"Regarde"} },
-                    { id:521, ar:"خذي", pron:"Kuthi", np:{am:"ኹዚ",bn:"খুজি",hi:"खुज़ी"}, t:{en:"Take",ph:"Kunin",id:"Ambil",am:"ውሰጅ",or:"Fudhu",sw:"Chukua",lg:"Twala",so:"Qaado",bn:"নাও",hi:"लो",fr:"Prends"} },
-                    { id:522, ar:"سوي", pron:"Sawi", np:{am:"ሳዊ",bn:"সাওয়ি",hi:"सवी"}, t:{en:"Do",ph:"Gawin",id:"Lakukan",am:"አድርጊ",or:"Godi",sw:"Fanya",lg:"Kola",so:"Sameey",bn:"কর",hi:"करो",fr:"Fais"} },
-                    { id:523, ar:"لا تسوين", pron:"La Tsaween", np:{am:"ላ ትሳዊን",bn:"লা তসায়ین",hi:"ला तसवीन"}, t:{en:"Don't do",ph:"Huwag",id:"Jangan",am:"አታድርጊ",or:"Hin godhin",sw:"Usifanye",lg:"Tokola",so:"Ha samayn",bn:"করো না",hi:"मत करो",fr:"Ne fais pas"} },
-                    { id:524, ar:"وقفي", pron:"Waggifi", np:{am:"ዋጊፊ",bn:"ওয়াগ্গিফি",hi:"वग्गिफ़ी"}, t:{en:"Stop",ph:"Tigil",id:"Berhenti",am:"አቁሚ",or:"Dhaabi",sw:"Simama",lg:"Yimirira",so:"Istaag",bn:"থামো",hi:"रुको",fr:"Arrête"} },
-                    { id:525, ar:"ساعديني", pron:"Sa'deeni", np:{am:"ሳዕዲኒ",bn:"সাঈদীኒ",hi:"सा'दीनी"}, t:{en:"Help me",ph:"Tulungan",id:"Bantu saya",am:"ርጂኝ",or:"Na gargaari",sw:"Nisaidie",lg:"Nnyamba",so:"I caawi",bn:"সাহায্য কর",hi:"मदद करो",fr:"Aide-moi"} },
-                    { id:526, ar:"اجلسي", pron:"Ijlisi", np:{am:"ኢጅሊሲ",bn:"ইজলিসি",hi:"इजलिसी"}, t:{en:"Sit",ph:"Upo",id:"Duduk",am:"ተቀመጪ",or:"Taa'i",sw:"Kaa",lg:"Tuula",so:"Fariiso",bn:"বসো",hi:"बैठो",fr:"Assieds-toi"} },
-                    { id:527, ar:"رتبي", pron:"Rattibi", np:{am:"ራቲቢ",bn:"রাত্তিবি",hi:"रत्तीबी"}, t:{en:"Organize",ph:"Ayusin",id:"Rapikan",am:"አስተካክዪ",or:"Qopheessi",sw:"Panga",lg:"Teekateeka",so:"Nidaami",bn:"গুছিয়ে রাখো",hi:"व्यवस्थित करो",fr:"Ranger"} }
+                    { id:501, ar:"تعالي", pr:"Ta'ali", np:{am:"ታዓሊ",bn:"তায়ালি",hi:"ताआली"}, t:{en:"Come",ph:"Halika",id:"Sini",am:"ነይ",or:"Kottu",sw:"Njoo",lg:"Jangu",so:"Kaalay",bn:"এসো",hi:"आओ",fr:"Viens"} },
+                    { id:502, ar:"روحي", pr:"Roohi", np:{am:"ሩሂ",bn:"রুহি",hi:"रूही"}, t:{en:"Go",ph:"Punta",id:"Pergi",am:"ሂጂ",or:"Deemi",sw:"Nenda",lg:"Genda",so:"Tag",bn:"যাও",hi:"जाओ",fr:"Va"} },
+                    { id:503, ar:"جيبي", pr:"Jeebi", np:{am:"ጂቢ",bn:"জিবি",hi:"जीबी"}, t:{en:"Bring",ph:"Dalhin",id:"Bawa",am:"አምጪ",or:"Fidi",sw:"Leta",lg:"Leeta",so:"Keen",bn:"আনো",hi:"लाओ",fr:"Apporte"} },
+                    { id:504, ar:"ودي", pr:"Waddi", np:{am:"ዋዲ",bn:"ওয়াদ্দি",hi:"वद्दी"}, t:{en:"Take it",ph:"Dalhin",id:"Bawa",am:"ውሰጅ",or:"Geesi",sw:"Peleka",lg:"Twaala",so:"Gee",bn:"নিয়ে যাও",hi:"ले जाओ",fr:"Emmène"} },
+                    { id:505, ar:"بسرعة", pr:"Bsur'ah", np:{am:"ብሱርዓ",bn:"বসুরা",hi:"बसुरआ"}, t:{en:"Quickly",ph:"Mabilis",id:"Cepat",am:"በፍጥነት",or:"Dafii",sw:"Haraka",lg:"Mangu",so:"Dhaqso",bn:"তাড়াতাড়ি",hi:"जल्दी",fr:"Vite"} },
+                    { id:506, ar:"خلاص", pr:"Khalas", np:{am:"ኻላስ",bn:"খালাস",hi:"खलास"}, t:{en:"Finished",ph:"Tapos na",id:"Selesai",am:"አልቋል",or:"Xumure",sw:"Tayari",lg:"Kiwede",so:"Dhamaad",bn:"শেষ",hi:"खत्म",fr:"Fini"} },
+                    { id:507, ar:"فهمتي؟", pr:"Fhimti?", np:{am:"ፍሂምቲ",bn:"ফহিমতি",hi:"फहिमटी"}, t:{en:"Understand?",ph:"Naintindihan?",id:"Mengerti?",am:"ገባሽ?",or:"Sii galee?",sw:"Umeelewa?",lg:"Otegedde?",so:"Ma fahamtay?",bn:"বুঝেছো?",hi:"समझी?",fr:"Compris?"} },
+                    { id:508, ar:"نعم", pr:"Na'am", np:{am:"ነዓም",bn:"নাআম",hi:"नआम"}, t:{en:"Yes",ph:"Oo",id:"Ya",am:"አዎ",or:"Eeyyee",sw:"Ndiyo",lg:"Yee",so:"Haa",bn:"হ্যাঁ",hi:"हाँ",fr:"Oui"} },
+                    { id:509, ar:"لا", pr:"La", np:{am:"ላ",bn:"লা",hi:"ला"}, t:{en:"No",ph:"Hindi",id:"Tidak",am:"አይ",or:"Lakki",sw:"Hapana",lg:"Nedda",so:"Maya",bn:"না",hi:"नहीं",fr:"Non"} },
+                    { id:510, ar:"افتحي", pr:"Iftahi", np:{am:"ኢፍታሂ",bn:"ইফতাহী",hi:"इफ़ताही"}, t:{en:"Open",ph:"Buksan",id:"Buka",am:"ክፈት",or:"Bani",sw:"Fungua",lg:"Ggula",so:"Fur",bn:"খোলা",hi:"खोलना",fr:"Ouvrir"} },
+                    { id:511, ar:"سكري", pr:"Sakkiri", np:{am:"ሳኪሪ",bn:"সাক্কিরি",hi:"सक्किरी"}, t:{en:"Close",ph:"Isara",id:"Tutup",am:"ዝጋ",or:"Cufi",sw:"Funga",lg:"Ggala",so:"Xir",bn:"বন্ধ করা",hi:"बंद करना",fr:"Fermer"} },
+                    { id:512, ar:"شغلي", pr:"Shaghili", np:{am:"ሻጊሊ",bn:"শাগ্গিলি",hi:"शग्गिली"}, t:{en:"Turn on",ph:"Buhayin",id:"Nyalakan",am:"አብሪ",or:"Bani",sw:"Washa",lg:"Tekaako",so:"Daar",bn:"চালু কর",hi:"चालू करो",fr:"Allumer"} },
+                    { id:513, ar:"طفي", pr:"Taffi", np:{am:"ጣፊ",bn:"তাফফি",hi:"तफ्फी"}, t:{en:"Turn off",ph:"Patayin",id:"Matikan",am:"አጥፊ",or:"Dhaamsi",sw:"Zima",lg:"Ggalawo",so:"Dami",bn:"বন্ধ কর",hi:"बंद करो",fr:"Éteindre"} },
+                    { id:514, ar:"شيلي", pr:"Sheeli", np:{am:"ሺሊ",bn:"শিলি",hi:"शीली"}, t:{en:"Lift/Remove",ph:"Alisin",id:"Angkat",am:"አንሺ",or:"Fudhu",sw:"Ondoa",lg:"Gyawo",so:"Qaad",bn:"সরিয়ে নাও",hi:"हटाओ",fr:"Enlever"} },
+                    { id:515, ar:"حطي", pr:"Hutti", np:{am:"ሁጢ",bn:"হুত্তি",hi:"हुत्ती"}, t:{en:"Put",ph:"Ilagay",id:"Taruh",am:"አስቀምጪ",or:"Kaahi",sw:"Weka",lg:"Teeka",so:"Dhig",bn:"রাখো",hi:"रखो",fr:"Mettre"} },
+                    { id:516, ar:"نظفي", pr:"Nadhifi", np:{am:"ናዲፊ",bn:"নাদদিফি",hi:"नदीफी"}, t:{en:"Clean",ph:"Linisin",id:"Bersihkan",am:"አፅጂ",or:"Qulqulleessi",sw:"Safisha",lg:"Longoosa",so:"Nadiifi",bn:"পরিষ্কার কর",hi:"साफ करो",fr:"Nettoyer"} },
+                    { id:517, ar:"غسلي", pr:"Ghassili", np:{am:"ጋሲሊ",bn:"গাসসিলি",hi:"गसिली"}, t:{en:"Wash",ph:"Hugasan",id:"Cuci",am:"እጠቢ",or:"Dhiqi",sw:"Osha",lg:"Oza",so:"Dhaq",bn:"ধোও",hi:"धोओ",fr:"Laver"} },
+                    { id:518, ar:"انتظري", pr:"Intadhiri", np:{am:"ኢንታዚሪ",bn:"ইনতাজিরি",hi:"इंतज़िरी"}, t:{en:"Wait",ph:"Sandali",id:"Tunggu",am:"ጠብቂ",or:"Eegi",sw:"Subiri",lg:"Linda",so:"Sug",bn:"অপেক্ষা করা",hi:"इंतज़ार",fr:"Attendre"} },
+                    { id:519, ar:"اسمعي", pr:"Isma'i", np:{am:"ኢስማዒ",bn:"ইসমাঈ",hi:"इस्मयी"}, t:{en:"Listen",ph:"Makinig",id:"Dengar",am:"ስማ",or:"Dhagahi",sw:"Sikiliza",lg:"Wulira",so:"Dhageyso",bn:"শোন",hi:"सुनो",fr:"Écoute"} },
+                    { id:520, ar:"شوفي", pr:"Shoofi", np:{am:"ሹፊ",bn:"শুফি",hi:"शूफी"}, t:{en:"Look",ph:"Tingnan",id:"Lihat",am:"እይ",or:"Ilaali",sw:"Tazama",lg:"Laba",so:"Fiiri",bn:"দেখ",hi:"देखो",fr:"Regarde"} },
+                    { id:521, ar:"خذي", pr:"Kuthi", np:{am:"ኹዚ",bn:"খুজি",hi:"खुज़ी"}, t:{en:"Take",ph:"Kunin",id:"Ambil",am:"ውሰጅ",or:"Fudhu",sw:"Chukua",lg:"Twala",so:"Qaado",bn:"নাও",hi:"लो",fr:"Prends"} },
+                    { id:522, ar:"سوي", pr:"Sawi", np:{am:"ሳዊ",bn:"সাওয়ি",hi:"सवी"}, t:{en:"Do",ph:"Gawin",id:"Lakukan",am:"አድርጊ",or:"Godi",sw:"Fanya",lg:"Kola",so:"Sameey",bn:"কর",hi:"करो",fr:"Fais"} },
+                    { id:523, ar:"لا تسوين", pr:"La Tsaween", np:{am:"ላ ትሳዊን",bn:"লা তসায়ین",hi:"ला तसवीन"}, t:{en:"Don't do",ph:"Huwag",id:"Jangan",am:"አታድርጊ",or:"Hin godhin",sw:"Usifanye",lg:"Tokola",so:"Ha samayn",bn:"করো না",hi:"मत करो",fr:"Ne fais pas"} },
+                    { id:524, ar:"وقفي", pr:"Waggifi", np:{am:"ዋጊፊ",bn:"ওয়াগ্গিফি",hi:"वग्गिफ़ी"}, t:{en:"Stop",ph:"Tigil",id:"Berhenti",am:"አቁሚ",or:"Dhaabi",sw:"Simama",lg:"Yimirira",so:"Istaag",bn:"থামো",hi:"रुको",fr:"Arrête"} },
+                    { id:525, ar:"ساعديني", pr:"Sa'deeni", np:{am:"ሳዕዲኒ",bn:"সাঈদীኒ",hi:"सा'दीनी"}, t:{en:"Help me",ph:"Tulungan",id:"Bantu saya",am:"ርጂኝ",or:"Na gargaari",sw:"Nisaidie",lg:"Nnyamba",so:"I caawi",bn:"সাহায্য কর",hi:"मदद करो",fr:"Aide-moi"} },
+                    { id:526, ar:"اجلسي", pr:"Ijlisi", np:{am:"ኢጅሊሲ",bn:"ইজলিসি",hi:"इजलिसी"}, t:{en:"Sit",ph:"Upo",id:"Duduk",am:"ተቀመጪ",or:"Taa'i",sw:"Kaa",lg:"Tuula",so:"Fariiso",bn:"বসো",hi:"बैठो",fr:"Assieds-toi"} },
+                    { id:527, ar:"رتبي", pr:"Rattibi", np:{am:"ራቲቢ",bn:"রাত্তিবি",hi:"रत्तीबी"}, t:{en:"Organize",ph:"Ayusin",id:"Rapikan",am:"አስተካክዪ",or:"Qopheessi",sw:"Panga",lg:"Teekateeka",so:"Nidaami",bn:"গুছিয়ে রাখো",hi:"व्यवस्थित करो",fr:"Ranger"} }
                 ]
             },
             {
                 category: "🍳 المطبخ والطعام",
                 transCat: { en:"Kitchen & Food", ph:"Kusina at Pagkain", id:"Dapur & Makanan", am:"ወጥ ቤት/ምግብ", or:"Kushinaa", sw:"Jikoni & Chakula", lg:"Effumbiro", so:"Jikada", bn:"রান্নাঘর", hi:"रसोई", fr:"Cuisine" },
                 words: [
-                    { id:601, ar:"مويه", pron:"Moyah", np:{am:"ሞያ",bn:"মোয়া",hi:"मोया"}, t:{en:"Water",ph:"Tubig",id:"Air",am:"ውሃ",or:"Bishaan",sw:"Maji",lg:"Amazzi",so:"Biyo",bn:"জল",hi:"पानी",fr:"Eau"} },
-                    { id:602, ar:"رز", pron:"Ruz", np:{am:"ሩዝ",bn:"রুজ",hi:"रुज़"}, t:{en:"Rice",ph:"Kanin",id:"Nasi",am:"ሩዝ",or:"Ruuzii",sw:"Mchele",lg:"Omupunga",so:"Bariis",bn:"ভাত",hi:"चावल",fr:"Riz"} },
-                    { id:603, ar:"دجاج", pron:"Dajaj", np:{am:"ዳጃጅ",bn:"দাজাজ",hi:"दजाज"}, t:{en:"Chicken",ph:"Manok",id:"Ayam",am:"ዶሮ",or:"Lukkuu",sw:"Kuku",lg:"Enkoko",so:"Digaag",bn:"মুরগি",hi:"मुर्गी",fr:"Poulet"} },
-                    { id:604, ar:"لحم", pron:"Laham", np:{am:"ላሃም",bn:"ላহাম",hi:"लहम"}, t:{en:"Meat",ph:"Karne",id:"Daging",am:"ስጋ",or:"Foon",sw:"Nyama",lg:"Enyama",so:"Hilib",bn:"মাংস",hi:"गोश्त",fr:"Viande"} },
-                    { id:605, ar:"خضار", pron:"Khudhar", np:{am:"ኹዳር",bn:"খুদার",hi:"खुदार"}, t:{en:"Vegetables",ph:"Gulay",id:"Sayur",am:"አትክልት",or:"Kuduraa",sw:"Mboga",lg:"Enva",so:"Khudaar",bn:"সবজি",hi:"सब्जियां",fr:"Légumes"} },
-                    { id:606, ar:"خبز", pron:"Khubz", np:{am:"ኹብዝ",bn:"খুবজ",hi:"खुब्ज़"}, t:{en:"Bread",ph:"Tinapay",id:"Roti",am:"ዳቦ",or:"Daabboo",sw:"Mkate",lg:"Omugaati",so:"Rooti",bn:"রুটি",hi:"रोटी",fr:"Pain"} },
-                    { id:607, ar:"ملح", pron:"Milh", np:{am:"ሚልህ",bn:"মিলহ",hi:"मिल्ह"}, t:{en:"Salt",ph:"Asin",id:"Garam",am:"ጨው",or:"Soogidda",sw:"Chumvi",lg:"Omunnyo",so:"Cusbo",bn:"লবণ",hi:"नमक",fr:"Sel"} },
-                    { id:608, ar:"سكر", pron:"Sukkar", np:{am:"ሱካር",bn:"সুক্কার",hi:"सुक्कर"}, t:{en:"Sugar",ph:"Asukal",id:"Gula",am:"ስኳር",or:"Sukkara",sw:"Sukari",lg:"Ssukaali",so:"Sokor",bn:"চিনি",hi:"चीनी",fr:"Sucre"} },
-                    { id:609, ar:"زيت", pron:"Zait", np:{am:"ዘይት",bn:"জাইত",hi:"ज़ैت"}, t:{en:"Oil",ph:"Mantika",id:"Minyak",am:"ዘይት",or:"Zayitii",sw:"Mafuta",lg:"Buto",so:"Saliid",bn:"তেল",hi:"तेल",fr:"Huile"} },
-                    { id:610, ar:"قطعي", pron:"Gatti'i", np:{am:"ጋጢዒ",bn:"গাত্তি",hi:"गत्ती"}, t:{en:"Cut",ph:"Hiwain",id:"Potong",am:"ቁረጥ",or:"Muri",sw:"Kata",lg:"Sala",so:"Jar",bn:"কাটা",hi:"काटो",fr:"Couper"} },
-                    { id:611, ar:"مواعين", pron:"Mawa'een", np:{am:"ማዋዒን",bn:"মাওয়াইন",hi:"मवाईन"}, t:{en:"Dishes",ph:"Mga pinggan",id:"Piring",am:"እቃዎች",or:"Meeyshaa",sw:"Vyombo",lg:"Ebikopo",so:"Suxuun",bn:"থালাবাসন",hi:"बर्तन",fr:"Vaisselle"} },
-                    { id:612, ar:"صحن", pron:"Sahan", np:{am:"ሳሀን",bn:"সাহান",hi:"सहन"}, t:{en:"Plate",ph:"Plato",id:"Piring",am:"ሳህን",or:"Saanii",sw:"Sahani",lg:"Esowani",so:"Saxan",bn:"থালা",hi:"प्लेट",fr:"Assiette"} },
-                    { id:613, ar:"ملعقة", pron:"Mil'agah", np:{am:"ሚልአጋ",bn:"মিলআগা",hi:"मिलअगा"}, t:{en:"Spoon",ph:"Kutsara",id:"Sendok",am:"ማንኪያ",or:"Fal'aana",sw:"Kijiko",lg:"Ekijiiko",so:"Buraash",bn:"চামচ",hi:"चम्मच",fr:"Cuillère"} },
-                    { id:614, ar:"سكين", pron:"Sikkin", np:{am:"ሲኪን",bn:"সিক্কিন",hi:"सिक्किन"}, t:{en:"Knife",ph:"Kutsilyo",id:"Pisau",am:"ቢላዋ",or:"Albee",sw:"Kisu",lg:"Akambe",so:"Mindi",bn:"ছুরি",hi:"चाकू",fr:"Couteau"} },
-                    { id:615, ar:"كوب", pron:"Koob", np:{am:"ኩብ",bn:"কুব",hi:"कूब"}, t:{en:"Cup",ph:"Baso",id:"Gelas",am:"ኩባያ",or:"Kubbaayyaa",sw:"Kikombe",lg:"Ekikopo",so:"Koob",bn:"কাপ",hi:"कप",fr:"Tasse"} },
-                    { id:616, ar:"فطور", pron:"Futoor", np:{am:"ፉጡር",bn:"ফুতুর",hi:"फुतूर"}, t:{en:"Breakfast",ph:"Almusal",id:"Sarapan",am:"ቁርስ",or:"Ciree",sw:"Kiamsha",lg:"Ekyenkya",so:"Quraac",bn:"সকালের নাস্তা",hi:"नाश्ता",fr:"Petit déj"} },
-                    { id:617, ar:"غداء", pron:"Ghada", np:{am:"ገዳ",bn:"গাদা",hi:"ग़दा"}, t:{en:"Lunch",ph:"Tanghalian",id:"Makan siang",am:"ምሳ",or:"Laaqana",sw:"Chakula",lg:"Ekyemisana",so:"Qado",bn:"দুপুরের খাবার",hi:"दोपहर खाना",fr:"Déjeuner"} },
-                    { id:618, ar:"عشاء", pron:"Asha", np:{am:"አሻ",bn:"আশা",hi:"अशा"}, t:{en:"Dinner",ph:"Hapunan",id:"Makan malam",am:"እራት",or:"Irbaata",sw:"Chakula",lg:"Ekyekiro",so:"Casho",bn:"রাতের খাবার",hi:"रात का खाना",fr:"Dîner"} },
-                    { id:619, ar:"بيض", pron:"Baidh", np:{am:"በይድ",bn:"বাইদ",hi:"बैद"}, t:{en:"Egg",ph:"Itlog",id:"Telur",am:"እንቁላል",or:"Hanqaaquu",sw:"Yai",lg:"Eggi",so:"Ukun",bn:"ডিম",hi:"अंडा",fr:"Œuf"} },
-                    { id:620, ar:"جبن", pron:"Jubun", np:{am:"ጁቡን",bn:"জুবুন",hi:"जुबुन"}, t:{en:"Cheese",ph:"Keso",id:"Keju",am:"አይብ",or:"Aayibii",sw:"Jibini",lg:"Chiizi",so:"Jiis",bn:"পনির",hi:"पनीर",fr:"Fromage"} },
-                    { id:621, ar:"شاهي", pron:"Shahi", np:{am:"ሻሂ",bn:"শাহি",hi:"शाही"}, t:{en:"Tea",ph:"Tsaa",id:"Teh",am:"ሻይ",or:"Shaayii",sw:"Chai",lg:"Cayi",so:"Shaah",bn:"চা",hi:"चाय",fr:"Thé"} },
-                    { id:622, ar:"قهوة", pron:"Gahwa", np:{am:"ጋህዋ",bn:"গাহওয়া",hi:"गहवा"}, t:{en:"Coffee",ph:"Kape",id:"Kopi",am:"ቡና",or:"Buna",sw:"Kahawa",lg:"Kaawa",so:"Qaxwe",bn:"কফি",hi:"कॉफ़ी",fr:"Café"} },
-                    { id:623, ar:"فواكه", pron:"Fawakeh", np:{am:"ፋዋኬህ",bn:"ফাওয়াকেহ",hi:"फ़वाकेह"}, t:{en:"Fruits",ph:"Prutas",id:"Buah",am:"ፍራፍሬዎች",or:"Fuduraa",sw:"Matunda",lg:"Ebibala",so:"Miraha",bn:"ফল",hi:"फल",fr:"Fruits"} },
-                    { id:624, ar:"قدر", pron:"Gidir", np:{am:"ጊድር",bn:"গিদির",hi:"गिदिर"}, t:{en:"Pot",ph:"Kaldero",id:"Panci",am:"ድስት",or:"Distii",sw:"Sufuria",lg:"Esefuliya",so:"Dheri",bn:"হাঁড়ি",hi:"बर्तन",fr:"Marmite"} },
-                    { id:625, ar:"طاوة", pron:"Tawah", np:{am:"ጣዋ",bn:"তাওয়া",hi:"तावा"}, t:{en:"Pan",ph:"Kawali",id:"Wajan",am:"መጥበሻ",or:"Qodaa",sw:"Kikaango",lg:"Pani",so:"Digsi",bn:"প্যান",hi:"कड़ाही",fr:"Poêle"} },
-                    { id:626, ar:"حار", pron:"Har", np:{am:"ሃር",bn:"হার",hi:"हार"}, t:{en:"Hot",ph:"Mainit",id:"Panas",am:"ትኩስ",or:"Ho'aa",sw:"Moto",lg:"Ekyokya",so:"Kulul",bn:"গরম",hi:"गर्म",fr:"Chaud"} },
-                    { id:627, ar:"بارد", pron:"Bared", np:{am:"ባሬድ",bn:"বারিদ",hi:"बारेद"}, t:{en:"Cold",ph:"Malamig",id:"Dingin",am:"ቀዝቃዛ",or:"Qabbanaa'aa",sw:"Baridi",lg:"Ekinyogoga",so:"Qabow",bn:"ঠান্ডا",hi:"ठंडा",fr:"Froid"} },
-                    { id:628, ar:"شوكة", pron:"Shokah", np:{am:"ሾካ",bn:"শোকা",hi:"शोका"}, t:{en:"Fork",ph:"Tinidor",id:"Garpu",am:"ሹካ",or:"Shuukaa",sw:"Uma",lg:"Ewuuma",so:"Fargeeto",bn:"কাঁটাচামচ",hi:"कांटा",fr:"Fourchette"} }
+                    { id:601, ar:"مويه", pr:"Moyah", np:{am:"ሞያ",bn:"মোয়া",hi:"मोया"}, t:{en:"Water",ph:"Tubig",id:"Air",am:"ውሃ",or:"Bishaan",sw:"Maji",lg:"Amazzi",so:"Biyo",bn:"জল",hi:"पानी",fr:"Eau"} },
+                    { id:602, ar:"رز", pr:"Ruz", np:{am:"ሩዝ",bn:"রুজ",hi:"रुज़"}, t:{en:"Rice",ph:"Kanin",id:"Nasi",am:"ሩዝ",or:"Ruuzii",sw:"Mchele",lg:"Omupunga",so:"Bariis",bn:"ভাত",hi:"चावल",fr:"Riz"} },
+                    { id:603, ar:"دجاج", pr:"Dajaj", np:{am:"ዳጃጅ",bn:"দাজাজ",hi:"दजाज"}, t:{en:"Chicken",ph:"Manok",id:"Ayam",am:"ዶሮ",or:"Lukkuu",sw:"Kuku",lg:"Enkoko",so:"Digaag",bn:"মুরগি",hi:"मुर्गी",fr:"Poulet"} },
+                    { id:604, ar:"لحم", pr:"Laham", np:{am:"ላሃም",bn:"ላহাম",hi:"लहम"}, t:{en:"Meat",ph:"Karne",id:"Daging",am:"ስጋ",or:"Foon",sw:"Nyama",lg:"Enyama",so:"Hilib",bn:"মাংস",hi:"गोश्त",fr:"Viande"} },
+                    { id:605, ar:"خضار", pr:"Khudhar", np:{am:"ኹዳር",bn:"খুدار",hi:"खुदार"}, t:{en:"Vegetables",ph:"Gulay",id:"Sayur",am:"አትክልት",or:"Kuduraa",sw:"Mboga",lg:"Enva",so:"Khudaar",bn:"সবজি",hi:"सब्जियां",fr:"Légumes"} },
+                    { id:606, ar:"خبز", pr:"Khubz", np:{am:"ኹብዝ",bn:"খুবজ",hi:"खुब्ज़"}, t:{en:"Bread",ph:"Tinapay",id:"Roti",am:"ዳቦ",or:"Daabboo",sw:"Mkate",lg:"Omugaati",so:"Rooti",bn:"রুটি",hi:"रोटी",fr:"Pain"} },
+                    { id:607, ar:"ملح", pr:"Milh", np:{am:"ሚልህ",bn:"মিলহ",hi:"मिल्ह"}, t:{en:"Salt",ph:"Asin",id:"Garam",am:"ጨው",or:"Soogidda",sw:"Chumvi",lg:"Omunnyo",so:"Cusbo",bn:"লবণ",hi:"नमक",fr:"Sel"} },
+                    { id:608, ar:"سكر", pr:"Sukkar", np:{am:"ሱካር",bn:"সুক্কার",hi:"सुक्कर"}, t:{en:"Sugar",ph:"Asukal",id:"Gula",am:"ስኳር",or:"Sukkara",sw:"Sukari",lg:"Ssukaali",so:"Sokor",bn:"চিনি",hi:"चीनी",fr:"Sucre"} },
+                    { id:609, ar:"زيت", pr:"Zait", np:{am:"ዘይት",bn:"জাইত",hi:"ज़ैت"}, t:{en:"Oil",ph:"Mantika",id:"Minyak",am:"ዘይት",or:"Zayitii",sw:"Mafuta",lg:"Buto",so:"Saliid",bn:"তেল",hi:"तेल",fr:"Huile"} },
+                    { id:610, ar:"قطعي", pr:"Gatti'i", np:{am:"ጋጢዒ",bn:"গাত্তি",hi:"गत्ती"}, t:{en:"Cut",ph:"Hiwain",id:"Potong",am:"ቁረጥ",or:"Muri",sw:"Kata",lg:"Sala",so:"Jar",bn:"কাটা",hi:"काटो",fr:"Couper"} },
+                    { id:611, ar:"مواعين", pr:"Mawa'een", np:{am:"ማዋዒን",bn:"মাওয়াইন",hi:"मवाईन"}, t:{en:"Dishes",ph:"Mga pinggan",id:"Piring",am:"እቃዎች",or:"Meeyshaa",sw:"Vyombo",lg:"Ebikopo",so:"Suxuun",bn:"থালাবাসন",hi:"बर्तन",fr:"Vaisselle"} },
+                    { id:612, ar:"صحن", pr:"Sahan", np:{am:"ሳሀን",bn:"সাহান",hi:"सहन"}, t:{en:"Plate",ph:"Plato",id:"Piring",am:"ሳህን",or:"Saanii",sw:"Sahani",lg:"Esowani",so:"Saxan",bn:"থালা",hi:"प्लेट",fr:"Assiette"} },
+                    { id:613, ar:"ملعقة", pr:"Mil'agah", np:{am:"ሚልአጋ",bn:"মিলআগা",hi:"मिलअगा"}, t:{en:"Spoon",ph:"Kutsara",id:"Sendok",am:"ማንኪያ",or:"Fal'aana",sw:"Kijiko",lg:"Ekijiiko",so:"Buraash",bn:"চামচ",hi:"चम्मच",fr:"Cuillère"} },
+                    { id:614, ar:"سكين", pr:"Sikkin", np:{am:"ሲኪን",bn:"সিক্কিন",hi:"सिक्किन"}, t:{en:"Knife",ph:"Kutsilyo",id:"Pisau",am:"ቢላዋ",or:"Albee",sw:"Kisu",lg:"Akambe",so:"Mindi",bn:"ছুরি",hi:"चाकू",fr:"Couteau"} },
+                    { id:615, ar:"كوب", pr:"Koob", np:{am:"ኩብ",bn:"কুব",hi:"कूब"}, t:{en:"Cup",ph:"Baso",id:"Gelas",am:"ኩባያ",or:"Kubbaayyaa",sw:"Kikombe",lg:"Ekikopo",so:"Koob",bn:"কাপ",hi:"कप",fr:"Tasse"} },
+                    { id:616, ar:"فطور", pr:"Futoor", np:{am:"ፉጡር",bn:"ফুতুর",hi:"फुतूर"}, t:{en:"Breakfast",ph:"Almusal",id:"Sarapan",am:"ቁርስ",or:"Ciree",sw:"Kiamsha",lg:"Ekyenkya",so:"Quraac",bn:"সকালের নাস্তা",hi:"नाश्ता",fr:"Petit déj"} },
+                    { id:617, ar:"غداء", pr:"Ghada", np:{am:"ገዳ",bn:"গাদা",hi:"ग़दा"}, t:{en:"Lunch",ph:"Tanghalian",id:"Makan siang",am:"ምሳ",or:"Laaqana",sw:"Chakula",lg:"Ekyemisana",so:"Qado",bn:"দুপুরের খাবার",hi:"दोपहर खाना",fr:"Déjeuner"} },
+                    { id:618, ar:"عشاء", pr:"Asha", np:{am:"አሻ",bn:"আশা",hi:"अशा"}, t:{en:"Dinner",ph:"Hapunan",id:"Makan malam",am:"እራት",or:"Irbaata",sw:"Chakula",lg:"Ekyekiro",so:"Casho",bn:"রাতের খাবার",hi:"रात का खाना",fr:"Dîner"} },
+                    { id:619, ar:"بيض", pr:"Baidh", np:{am:"በይድ",bn:"বাইদ",hi:"बैद"}, t:{en:"Egg",ph:"Itlog",id:"Telur",am:"እንቁላል",or:"Hanqaaquu",sw:"Yai",lg:"Eggi",so:"Ukun",bn:"ডিম",hi:"अंडा",fr:"Œuf"} },
+                    { id:620, ar:"جبن", pr:"Jubun", np:{am:"ጁቡን",bn:"জুবুন",hi:"जुबुन"}, t:{en:"Cheese",ph:"Keso",id:"Keju",am:"አይብ",or:"Aayibii",sw:"Jibini",lg:"Chiizi",so:"Jiis",bn:"পনির",hi:"पनीर",fr:"Fromage"} },
+                    { id:621, ar:"شاهي", pr:"Shahi", np:{am:"ሻሂ",bn:"শাহি",hi:"शाही"}, t:{en:"Tea",ph:"Tsaa",id:"Teh",am:"ሻይ",or:"Shaayii",sw:"Chai",lg:"Cayi",so:"Shaah",bn:"চা",hi:"चाय",fr:"Thé"} },
+                    { id:622, ar:"قهوة", pr:"Gahwa", np:{am:"ጋህዋ",bn:"গাহওয়া",hi:"गहवा"}, t:{en:"Coffee",ph:"Kape",id:"Kopi",am:"ቡና",or:"Buna",sw:"Kahawa",lg:"Kaawa",so:"Qaxwe",bn:"কফি",hi:"कॉफ़ी",fr:"Café"} },
+                    { id:623, ar:"فواكه", pr:"Fawakeh", np:{am:"ፋዋኬህ",bn:"ফাওয়াকেহ",hi:"फ़वाकेह"}, t:{en:"Fruits",ph:"Prutas",id:"Buah",am:"ፍራፍሬዎች",or:"Fuduraa",sw:"Matunda",lg:"Ebibala",so:"Miraha",bn:"ফল",hi:"फल",fr:"Fruits"} },
+                    { id:624, ar:"قدر", pr:"Gidir", np:{am:"ጊድር",bn:"গিদির",hi:"गिदिर"}, t:{en:"Pot",ph:"Kaldero",id:"Panci",am:"ድስት",or:"Distii",sw:"Sufuria",lg:"Esefuliya",so:"Dheri",bn:"হাঁড়ি",hi:"बर्तन",fr:"Marmite"} },
+                    { id:625, ar:"طاوة", pr:"Tawah", np:{am:"ጣዋ",bn:"তাওয়া",hi:"तावा"}, t:{en:"Pan",ph:"Kawali",id:"Wajan",am:"መጥበሻ",or:"Qodaa",sw:"Kikaango",lg:"Pani",so:"Digsi",bn:"প্যান",hi:"कड़ाही",fr:"Poêle"} },
+                    { id:626, ar:"حار", pr:"Har", np:{am:"ሃር",bn:"হার",hi:"हार"}, t:{en:"Hot",ph:"Mainit",id:"Panas",am:"ትኩስ",or:"Ho'aa",sw:"Moto",lg:"Ekyokya",so:"Kulul",bn:"গরম",hi:"गर्म",fr:"Chaud"} },
+                    { id:627, ar:"بارد", pr:"Bared", np:{am:"ባሬድ",bn:"বারিদ",hi:"बारेद"}, t:{en:"Cold",ph:"Malamig",id:"Dingin",am:"ቀዝቃዛ",or:"Qabbanaa'aa",sw:"Baridi",lg:"Ekinyogoga",so:"Qabow",bn:"ঠান্ডا",hi:"ठंडा",fr:"Froid"} },
+                    { id:628, ar:"شوكة", pr:"Shokah", np:{am:"ሾካ",bn:"শোকা",hi:"शोका"}, t:{en:"Fork",ph:"Tinidor",id:"Garpu",am:"ሹካ",or:"Shuukaa",sw:"Uma",lg:"Ewuuma",so:"Fargeeto",bn:"কাঁটাচামচ",hi:"कांटा",fr:"Fourchette"} }
                 ]
             },
             {
                 category: "🧹 التنظيف والترتيب",
                 transCat: { en:"Cleaning", ph:"Paglilinis", id:"Pembersihan", am:"ጽዳት", or:"Qulqulleessuu", sw:"Usafi", lg:"Okulongoosa", so:"Nadiifinta", bn:"পরিষ্কার", hi:"सफाई", fr:"Nettoyage" },
                 words: [
-                    { id:701, ar:"غسيل", pron:"Ghasil", np:{am:"ጋሲል",bn:"গাসিল",hi:"गसील"}, t:{en:"Wash",ph:"Laba",id:"Cuci",am:"ማጠብ",or:"Dhiquu",sw:"Osha",lg:"Oza",so:"Dhaq",bn:"ধোয়া",hi:"धोना",fr:"Laver"} },
-                    { id:702, ar:"ملابس", pron:"Malabis", np:{am:"ማላቢስ",bn:"মালাবিস",hi:"मलाबিস"}, t:{en:"Clothes",ph:"Damit",id:"Pakaian",am:"ልብሶች",or:"Uffata",sw:"Nguo",lg:"Engoye",so:"Dhar",bn:"কাপড়",hi:"कपड़े",fr:"Vêtements"} },
-                    { id:703, ar:"كوي", pron:"Kawi", np:{am:"ካዊ",bn:"কাউই",hi:"कवी"}, t:{en:"Iron",ph:"Plantsa",id:"Setrika",am:"ተኩስ",or:"Kawaayii",sw:"Piga pasi",lg:"Goolola",so:"Kaawi",bn:"ইস্ত্রি করা",hi:"इस्त्री",fr:"Repasser"} },
-                    { id:704, ar:"كنس", pron:"Kannes", np:{am:"ካኔስ",bn:"কান্নেس",hi:"कन्नेस"}, t:{en:"Sweep",ph:"Walis",id:"Sapu",am:"መጥረግ",or:"Haruu",sw:"Fagia",lg:"Yera",so:"Xaaq",bn:"ঝাড়ু",hi:"झाड़ू",fr:"Balayer"} },
-                    { id:705, ar:"مسح", pron:"Masseh", np:{am:"ማሴህ",bn:"মাসেহ",hi:"मस्सेह"}, t:{en:"Mop",ph:"Punasan",id:"Pel",am:"ማፅዳት",or:"Haqaa",sw:"Futa",lg:"Siimula",so:"Tirtir",bn:"মোছা",hi:"पोंछा",fr:"Essuyer"} },
-                    { id:706, ar:"تنظيف", pron:"Tandheef", np:{am:"ታንዲፍ",bn:"তানদিফ",hi:"तंदीफ"}, t:{en:"Clean",ph:"Linis",id:"Bersih",am:"ማጽዳት",or:"Qulqulleessuu",sw:"Safisha",lg:"Longoosa",so:"Nadiifi",bn:"পরিষ্কার",hi:"साफ",fr:"Nettoyer"} },
-                    { id:707, ar:"صابون", pron:"Saboon", np:{am:"ሳቡን",bn:"সাবুন",hi:"साबुन"}, t:{en:"Soap",ph:"Sabon",id:"Sabun",am:"ሳሙና",or:"Saamunaa",sw:"Sabuni",lg:"Ssabbuuni",so:"Saabuun",bn:"সাবান",hi:"साबुन",fr:"Savon"} },
-                    { id:708, ar:"فوطة", pron:"Footah", np:{am:"ፉጣ",bn:"ফুতা",hi:"फूता"}, t:{en:"Towel",ph:"Tuwalya",id:"Handuk",am:"ፎጣ",or:"Fooxaa",sw:"Taulo",lg:"Tawulo",so:"Shukumaan",bn:"তোয়ালে",hi:"तौलिया",fr:"Serviette"} },
-                    { id:709, ar:"غبار", pron:"Ghubar", np:{am:"ጉባር",bn:"গুবার",hi:"ग़ुबार"}, t:{en:"Dust",ph:"Alikabok",id:"Debu",am:"አቧራ",or:"Awwaara",sw:"Vumbi",lg:"Enfuufu",so:"Boos",bn:"ধুলো",hi:"धूल",fr:"Poussière"} },
-                    { id:710, ar:"حمام", pron:"Hammam", np:{am:"ሀማም",bn:"হাম্মাম",hi:"हम्माम"}, t:{en:"Bathroom",ph:"Banyo",id:"Kamar mandi",am:"መጸዳጃ",or:"Fincaanii",sw:"Bafu",lg:"Kiyigo",so:"Suuliga",bn:"বাথরুম",hi:"बाथरूम",fr:"SDB"} },
-                    { id:711, ar:"زبالة", pron:"Zbalah", np:{am:"ዝባላ",bn:"জবালা",hi:"ज़बाला"}, t:{en:"Trash",ph:"Basura",id:"Sampah",am:"ቆሻሻ",or:"Kosi",sw:"Takataka",lg:"Kisasiro",so:"Qashin",bn:"আবর্জনা",hi:"कचरा",fr:"Poubelle"} },
-                    { id:712, ar:"سطل", pron:"Satal", np:{am:"ሳጣል",bn:"সাতাল",hi:"सटल"}, t:{en:"Bucket",ph:"Timba",id:"Ember",am:"ባልዲ",or:"Baaldii",sw:"Ndoo",lg:"Ndoo",so:"Baaldi",bn:"বালতি",hi:"बाल्टी",fr:"Seau"} },
-                    { id:713, ar:"مساحة", pron:"Massahah", np:{am:"ማሳሀ",bn:"মাসসাহা",hi:"मस्साहा"}, t:{en:"Mop stick",ph:"Mop",id:"Pel",am:"መጥረጊያ",or:"Meyshaa",sw:"Kifagio",lg:"Mopu",so:"Mop",bn:"মপ",hi:"पोंछा",fr:"Balai"} },
-                    { id:714, ar:"كلوركس", pron:"Clorox", np:{am:"ክሎሮክስ",bn:"ক্লোরক্স",hi:"क्लोरोक्स"}, t:{en:"Bleach",ph:"Bleach",id:"Pemutih",am:"በረኪና",or:"Berekina",sw:"Bliji",lg:"Jik",so:"Biliij",bn:"ব্লিচ",hi:"ब्लीच",fr:"Javel"} },
-                    { id:715, ar:"معطر", pron:"Mu'attir", np:{am:"ሙዓጢር",bn:"মুয়াত্তির",hi:"मुअत्तिर"}, t:{en:"Freshener",ph:"Pampabango",id:"Pewangi",am:"ማጣፈጫ",or:"Urgooftuu",sw:"Manukato",lg:"Akaloosa",so:"Udug",bn:"ফ্রেশনার",hi:"फ्रेशनर",fr:"Désodorisant"} }
+                    { id:701, ar:"غسيل", pr:"Ghasil", np:{am:"ጋሲል",bn:"গাসিল",hi:"गसील"}, t:{en:"Wash",ph:"Laba",id:"Cuci",am:"ማጠብ",or:"Dhiquu",sw:"Osha",lg:"Oza",so:"Dhaq",bn:"ধোয়া",hi:"धोना",fr:"Laver"} },
+                    { id:702, ar:"ملابس", pr:"Malabis", np:{am:"ማላቢስ",bn:"মালাবিস",hi:"मलाबিস"}, t:{en:"Clothes",ph:"Damit",id:"Pakaian",am:"ልብሶች",or:"Uffata",sw:"Nguo",lg:"Engoye",so:"Dhar",bn:"কাপড়",hi:"कपड़े",fr:"Vêtements"} },
+                    { id:703, ar:"كوي", pr:"Kawi", np:{am:"ካዊ",bn:"কাউই",hi:"कवी"}, t:{en:"Iron",ph:"Plantsa",id:"Setrika",am:"ተኩስ",or:"Kawaayii",sw:"Piga pasi",lg:"Goolola",so:"Kaawi",bn:"ইস্ত্রি করা",hi:"इस्त्री",fr:"Repasser"} },
+                    { id:704, ar:"كنس", pr:"Kannes", np:{am:"ካኔስ",bn:"কান্নেس",hi:"कन्नेस"}, t:{en:"Sweep",ph:"Walis",id:"Sapu",am:"መጥረግ",or:"Haruu",sw:"Fagia",lg:"Yera",so:"Xaaq",bn:"ঝাড়ু",hi:"झाड़ू",fr:"Balayer"} },
+                    { id:705, ar:"مسح", pr:"Masseh", np:{am:"ማሴህ",bn:"মাসেহ",hi:"मस्सेह"}, t:{en:"Mop",ph:"Punasan",id:"Pel",am:"ማፅዳት",or:"Haqaa",sw:"Futa",lg:"Siimula",so:"Tirtir",bn:"মোছা",hi:"पोंछा",fr:"Essuyer"} },
+                    { id:706, ar:"تنظيف", pr:"Tandheef", np:{am:"ታንዲፍ",bn:"তানদিফ",hi:"तंदीफ"}, t:{en:"Clean",ph:"Linis",id:"Bersih",am:"ማጽዳት",or:"Qulqulleessuu",sw:"Safisha",lg:"Longoosa",so:"Nadiifi",bn:"পরিষ্কার",hi:"साफ",fr:"Nettoyer"} },
+                    { id:707, ar:"صابون", pr:"Saboon", np:{am:"ሳቡን",bn:"সাবুন",hi:"साबुन"}, t:{en:"Soap",ph:"Sabon",id:"Sabun",am:"ሳሙና",or:"Saamunaa",sw:"Sabuni",lg:"Ssabbuuni",so:"Saabuun",bn:"সাবান",hi:"साबुन",fr:"Savon"} },
+                    { id:708, ar:"فوطة", pr:"Footah", np:{am:"ፉጣ",bn:"ফুতা",hi:"फूता"}, t:{en:"Towel",ph:"Tuwalya",id:"Handuk",am:"ፎጣ",or:"Fooxaa",sw:"Taulo",lg:"Tawulo",so:"Shukumaan",bn:"তোয়ালে",hi:"तौलिया",fr:"Serviette"} },
+                    { id:709, ar:"غبار", pr:"Ghubar", np:{am:"ጉባር",bn:"গুবার",hi:"ग़ुबार"}, t:{en:"Dust",ph:"Alikabok",id:"Debu",am:"አቧራ",or:"Awwaara",sw:"Vumbi",lg:"Enfuufu",so:"Boos",bn:"ধুলো",hi:"धूल",fr:"Poussière"} },
+                    { id:710, ar:"حمام", pr:"Hammam", np:{am:"ሀማም",bn:"হাম্মাম",hi:"हम्माम"}, t:{en:"Bathroom",ph:"Banyo",id:"Kamar mandi",am:"መጸዳጃ",or:"Fincaanii",sw:"Bafu",lg:"Kiyigo",so:"Suuliga",bn:"বাথরুম",hi:"बाथरूम",fr:"SDB"} },
+                    { id:711, ar:"زبالة", pr:"Zbalah", np:{am:"ዝባላ",bn:"জবালা",hi:"ज़बाला"}, t:{en:"Trash",ph:"Basura",id:"Sampah",am:"ቆሻሻ",or:"Kosi",sw:"Takataka",lg:"Kisasiro",so:"Qashin",bn:"আবর্জনা",hi:"कचरा",fr:"Poubelle"} },
+                    { id:712, ar:"سطل", pr:"Satal", np:{am:"ሳጣል",bn:"সাতাল",hi:"सटल"}, t:{en:"Bucket",ph:"Timba",id:"Ember",am:"ባልዲ",or:"Baaldii",sw:"Ndoo",lg:"Ndoo",so:"Baaldi",bn:"বালতি",hi:"बाल्टी",fr:"Seau"} },
+                    { id:713, ar:"مساحة", pr:"Massahah", np:{am:"ማሳሀ",bn:"মাসসাহা",hi:"मस्साहा"}, t:{en:"Mop stick",ph:"Mop",id:"Pel",am:"መጥረጊያ",or:"Meyshaa",sw:"Kifagio",lg:"Mopu",so:"Mop",bn:"মপ",hi:"पोंछा",fr:"Balai"} },
+                    { id:714, ar:"كلوركس", pr:"Clorox", np:{am:"ክሎሮክስ",bn:"ক্লোরক্স",hi:"क्लोरोक्स"}, t:{en:"Bleach",ph:"Bleach",id:"Pemutih",am:"በረኪና",or:"Berekina",sw:"Bliji",lg:"Jik",so:"Biliij",bn:"ব্লিচ",hi:"ब्लीच",fr:"Javel"} },
+                    { id:715, ar:"معطر", pr:"Mu'attir", np:{am:"ሙዓጢር",bn:"মুয়াত্তির",hi:"मुअत्तिर"}, t:{en:"Freshener",ph:"Pampabango",id:"Pewangi",am:"ማጣፈጫ",or:"Urgooftuu",sw:"Manukato",lg:"Akaloosa",so:"Udug",bn:"ফ্রেশনার",hi:"फ्रेशनर",fr:"Désodorisant"} }
                 ]
             },
             {
                 category: "👶 العناية بالأطفال",
                 transCat: { en:"Kids Care", ph:"Gamit sa Bata", id:"Perawatan Anak", am:"የልጆች እንክብካቤ", or:"Kunuunsa", sw:"Utunzaji", lg:"Abaana", so:"Daryeelka", bn:"শিশুর যত্ন", hi:"बच्चों", fr:"Garde d'enfants" },
                 words: [
-                    { id:801, ar:"رضاعة", pron:"Radha'ah", np:{am:"ራዳዓ",bn:"রাধাআ",hi:"रधाआ"}, t:{en:"Bottle",ph:"Bote",id:"Botol",am:"ጡጦ",or:"Hoosisaa",sw:"Chupa",lg:"Eccupa",so:"Dhalada",bn:"ফিডার",hi:"बोतल",fr:"Biberon"} },
-                    { id:802, ar:"حليب", pron:"Halib", np:{am:"ሀሊብ",bn:"হালিব",hi:"हलीब"}, t:{en:"Milk",ph:"Gatas",id:"Susu",am:"ወተት",or:"Aannan",sw:"Maziwa",lg:"Amata",so:"Caano",bn:"দুধ",hi:"दूध",fr:"Lait"} },
-                    { id:803, ar:"حفاظات", pron:"Hifadhat", np:{am:"ሂፋዳት",bn:"হিফাদাত",hi:"हिफाज़त"}, t:{en:"Diapers",ph:"Lampin",id:"Popok",am:"ዳይፐር",or:"Daa'immanii",sw:"Nepi",lg:"Napi",so:"Xafaayad",bn:"ডায়াপার",hi:"डायपर",fr:"Couches"} },
-                    { id:804, ar:"يبكي", pron:"Yabki", np:{am:"ያብኪ",bn:"ইয়াবকি",hi:"यबकी"}, t:{en:"Crying",ph:"Umiiyak",id:"Menangis",am:"ማልቀስ",or:"Boo'a",sw:"Analia",lg:"Akaaba",so:"Ooyaya",bn:"কান্না",hi:"रोना",fr:"Pleure"} },
-                    { id:805, ar:"أكل", pron:"Akil", np:{am:"አኪል",bn:"আকিল",hi:"अकिल"}, t:{en:"Eat",ph:"Kain",id:"Makan",am:"ምግብ",or:"Nyaata",sw:"Chakula",lg:"Kulya",so:"Cun",bn:"খাবার",hi:"खाना",fr:"Manger"} },
-                    { id:806, ar:"نوم", pron:"Nom", np:{am:"ኖም",bn:"নোম",hi:"नोम"}, t:{en:"Sleep",ph:"Tulog",id:"Tidur",am:"እንቅልፍ",or:"Rafuu",sw:"Lala",lg:"Kwebaka",so:"Seexo",bn:"ঘুম",hi:"नींद",fr:"Dormir"} },
-                    { id:807, ar:"دواء", pron:"Dawa", np:{am:"ዳዋ",bn:"দাওয়া",hi:"दवा"}, t:{en:"Medicine",ph:"Gamot",id:"Obat",am:"መድሃኒት",or:"Qoricha",sw:"Dawa",lg:"Eddagala",so:"Daawo",bn:"ওষুধ",hi:"दवा",fr:"Médicament"} },
-                    { id:808, ar:"حرارة", pron:"Hararah", np:{am:"ሀራራ",bn:"হারারা",hi:"हरारा"}, t:{en:"Fever",ph:"Lagnat",id:"Demam",am:"ትኩሳት",or:"Oo'a",sw:"Homa",lg:"Omusujja",so:"Qandho",bn:"জ্বর",hi:"बुखार",fr:"Fièvre"} },
-                    { id:809, ar:"العب", pron:"Il'ab", np:{am:"ኢልዓብ",bn:"ইলআব",hi:"इलअब"}, t:{en:"Play",ph:"Laro",id:"Main",am:"መጫወት",or:"Tapha",sw:"Cheza",lg:"Zannya",so:"Ciyaar",bn:"খেলা",hi:"खेलना",fr:"Jouer"} },
-                    { id:810, ar:"روشي", pron:"Rawishi", np:{am:"ራዊሺ",bn:"রাউইশি",hi:"रविशी"}, t:{en:"Bath",ph:"Ligo",id:"Mandi",am:"መታጠብ",or:"Dhiquu",sw:"Kuoga",lg:"Naaba",so:"Qubays",bn:"গোসল",hi:"नहलाना",fr:"Bain"} },
-                    { id:811, ar:"شنطة", pron:"Shantah", np:{am:"ሻንጣ",bn:"শানতা",hi:"शनता"}, t:{en:"Bag",ph:"Bag",id:"Tas",am:"ቦርሳ",or:"Boorsaa",sw:"Mfuko",lg:"Ensawo",so:"Shandad",bn:"ব্যাগ",hi:"बैग",fr:"Sac"} },
-                    { id:812, ar:"ألعاب", pron:"Al'ab", np:{am:"አልዓብ",bn:"আলআব",hi:"अलअब"}, t:{en:"Toys",ph:"Laruan",id:"Mainan",am:"አሻንጉሊቶች",or:"Meyshaa",sw:"Vifaa",lg:"Ebyokuzanyisa",so:"Alaabta",bn:"খেলনা",hi:"खिलौने",fr:"Jouets"} }
+                    { id:801, ar:"رضاعة", pr:"Radha'ah", np:{am:"ራዳዓ",bn:"রাধাআ",hi:"रधाआ"}, t:{en:"Bottle",ph:"Bote",id:"Botol",am:"ጡጦ",or:"Hoosisaa",sw:"Chupa",lg:"Eccupa",so:"Dhalada",bn:"ফিডার",hi:"बोतल",fr:"Biberon"} },
+                    { id:802, ar:"حليب", pr:"Halib", np:{am:"ሀሊብ",bn:"হালিব",hi:"हलीब"}, t:{en:"Milk",ph:"Gatas",id:"Susu",am:"ወተት",or:"Aannan",sw:"Maziwa",lg:"Amata",so:"Caano",bn:"দুধ",hi:"दूध",fr:"Lait"} },
+                    { id:803, ar:"حفاظات", pr:"Hifadhat", np:{am:"ሂፋዳት",bn:"হিফাদাত",hi:"हिफाज़त"}, t:{en:"Diapers",ph:"Lampin",id:"Popok",am:"ዳይፐር",or:"Daa'immanii",sw:"Nepi",lg:"Napi",so:"Xafaayad",bn:"ডায়াপার",hi:"डायपर",fr:"Couches"} },
+                    { id:804, ar:"يبكي", pr:"Yabki", np:{am:"ያብኪ",bn:"ইয়াবকি",hi:"यबकी"}, t:{en:"Crying",ph:"Umiiyak",id:"Menangis",am:"ማልቀስ",or:"Boo'a",sw:"Analia",lg:"Akaaba",so:"Ooyaya",bn:"কান্না",hi:"रोना",fr:"Pleure"} },
+                    { id:805, ar:"أكل", pr:"Akil", np:{am:"አኪል",bn:"আকিল",hi:"अकिल"}, t:{en:"Eat",ph:"Kain",id:"Makan",am:"ምግብ",or:"Nyaata",sw:"Chakula",lg:"Kulya",so:"Cun",bn:"খাবার",hi:"खाना",fr:"Manger"} },
+                    { id:806, ar:"نوم", pr:"Nom", np:{am:"ኖም",bn:"নোম",hi:"नोम"}, t:{en:"Sleep",ph:"Tulog",id:"Tidur",am:"እንቅልፍ",or:"Rafuu",sw:"Lala",lg:"Kwebaka",so:"Seexo",bn:"ঘুম",hi:"नींद",fr:"Dormir"} },
+                    { id:807, ar:"دواء", pr:"Dawa", np:{am:"ዳዋ",bn:"দাওয়া",hi:"दवा"}, t:{en:"Medicine",ph:"Gamot",id:"Obat",am:"መድሃኒት",or:"Qoricha",sw:"Dawa",lg:"Eddagala",so:"Daawo",bn:"ওষুধ",hi:"दवा",fr:"Médicament"} },
+                    { id:808, ar:"حرارة", pr:"Hararah", np:{am:"ሀራራ",bn:"হারারা",hi:"हरारा"}, t:{en:"Fever",ph:"Lagnat",id:"Demam",am:"ትኩሳት",or:"Oo'a",sw:"Homa",lg:"Omusujja",so:"Qandho",bn:"জ্বর",hi:"बुखार",fr:"Fièvre"} },
+                    { id:809, ar:"العب", pr:"Il'ab", np:{am:"ኢልዓብ",bn:"ইলআব",hi:"इलअब"}, t:{en:"Play",ph:"Laro",id:"Main",am:"መጫወት",or:"Tapha",sw:"Cheza",lg:"Zannya",so:"Ciyaar",bn:"খেলা",hi:"खेलना",fr:"Jouer"} },
+                    { id:810, ar:"روشي", pr:"Rawishi", np:{am:"ራዊሺ",bn:"রাউইশি",hi:"रविशी"}, t:{en:"Bath",ph:"Ligo",id:"Mandi",am:"መታጠብ",or:"Dhiquu",sw:"Kuoga",lg:"Naaba",so:"Qubays",bn:"গোসল",hi:"नहलाना",fr:"Bain"} },
+                    { id:811, ar:"شنطة", pr:"Shantah", np:{am:"ሻንጣ",bn:"শানতা",hi:"शनता"}, t:{en:"Bag",ph:"Bag",id:"Tas",am:"ቦርሳ",or:"Boorsaa",sw:"Mfuko",lg:"Ensawo",so:"Shandad",bn:"ব্যাগ",hi:"बैग",fr:"Sac"} },
+                    { id:812, ar:"ألعاب", pr:"Al'ab", np:{am:"አልዓብ",bn:"আলআব",hi:"अलअब"}, t:{en:"Toys",ph:"Laruan",id:"Mainan",am:"አሻንጉሊቶች",or:"Meyshaa",sw:"Vifaa",lg:"Ebyokuzanyisa",so:"Alaabta",bn:"খেলনা",hi:"खिलौने",fr:"Jouets"} }
                 ]
             }
         ];
 
-        // ميزة ذكية لتحديث الكاش القديم
-        let storedData = localStorage.getItem('awalem_dict_v3_words');
-        let selectedWords = storedData ? JSON.parse(storedData).map(Number) : [101, 211, 301, 403, 501, 601, 703, 713, 716, 811];
+        let selectedWords = JSON.parse(localStorage.getItem('awalem_dict_v3_words')) || [101, 211, 301, 403, 501, 601, 703, 713, 716, 811];
 
         function initDictionary() { renderWordBank(); renderTable(); }
 
