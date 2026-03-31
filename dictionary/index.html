@@ -102,11 +102,28 @@
         .category-group h4 { font-size: 0.95rem; color: var(--ruby-petals); margin-bottom: 12px; border-bottom: 1px solid rgba(226, 180, 193, 0.4); padding-bottom: 5px;}
         .tags-container { display: flex; flex-wrap: wrap; gap: 10px; }
         
-        .word-tag { background: white; border: 1px solid var(--bubblegum); padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; font-weight: 500; cursor: pointer; user-select: none; transition: 0.2s; color: #4a4a4a;}
+        /* ---------------- تحديث الـ CSS الخاص بالجوال ---------------- */
+        .word-tag { 
+            background: white; border: 1px solid var(--bubblegum); padding: 8px 16px; border-radius: 20px; 
+            font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: 0.2s; color: #4a4a4a;
+            /* منع تحديد النص وظهور الخيارات المزعجة في الجوال */
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            -webkit-touch-callout: none;
+        }
         .word-tag.active { background: linear-gradient(135deg, var(--pink-mist), var(--bubblegum)); color: var(--ruby-petals); border-color: var(--cherry-soda); box-shadow: 0 4px 12px rgba(165, 81, 102, 0.15); font-weight: 600;}
 
-        /* كلاس الكلمات المحفوظة (الأرشيف) */
-        .learned-tag { background-color: #f0f0f5 !important; border: 1px dashed #c0c0c0 !important; color: #a0a0a0 !important; user-select: none; }
+        /* كلاس الكلمات المحفوظة (الأرشيف) مع منع التحديد */
+        .learned-tag { 
+            background-color: #f0f0f5 !important; border: 1px dashed #c0c0c0 !important; color: #a0a0a0 !important; 
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            -webkit-touch-callout: none;
+        }
 
         /* ---------------- تصميم الجدول المعتمد ---------------- */
         table { width: 100%; table-layout: fixed; border-collapse: collapse; margin-top: 10px; border: none; }
@@ -222,7 +239,7 @@
                 <ol class="intro-steps">
                     <li>حددي لغة العاملة من القائمة بالأسفل.</li>
                     <li>اختاري الكلمات المراد التركيز عليها من البنك لتضاف للجدول مباشرة.</li>
-                    <li><strong>أرشيف الكلمات:</strong> اضغطي مطولاً (أو الزر الأيمن) على أي كلمة أتقنتها العاملة لنقلها للأرشيف وإخفائها من الجدول.</li>
+                    <li><strong>أرشيف الكلمات:</strong> اضغطي مطولاً على أي كلمة أتقنتها العاملة لنقلها للأرشيف وإخفائها من الجدول.</li>
                     <li>اضغطي طباعة، وسيتم تجهيز الجدول بشكل نظيف وأنيق!</li>
                 </ol>
                 <div class="scientific-tip">
@@ -487,7 +504,7 @@
                     { id:530, ar:"عفواً", pron:"Afwan", np:{am:"አፍዋን",bn:"আফওয়ান",hi:"अफ़वान"}, t:{en:"Welcome/Excuse me",ph:"Walang anuman",id:"Sama-sama",am:"ምንም አይደለም",or:"Homaa miti",sw:"Karibu",lg:"Kale",so:"Adaa mudan",bn:"স্বাগতম",hi:"स्वागत है",fr:"De rien"} },
                     { id:531, ar:"معليش", pron:"Ma'lesh", np:{am:"ማዕሌሽ",bn:"малهش",hi:"मालिश"}, t:{en:"Sorry",ph:"Pasensya",id:"Maaf",am:"ይቅርታ",or:"Dhiifama",sw:"Samahani",lg:"Nsonyiwa",so:"Waan ka xumahay",bn:"দুঃখিত",hi:"माफ़ करना",fr:"Désolé"} },
                     { id:532, ar:"دكتور", pron:"Doctor", np:{am:"ዶክተር",bn:"ডাক্তার",hi:"डॉक्टर"}, t:{en:"Doctor",ph:"Doktor",id:"Dokter",am:"ዶክተር",or:"Doktora",sw:"Daktari",lg:"Omusawo",so:"Dhaqtar",bn:"ডাক্তার",hi:"डॉक्टर",fr:"Docteur"} },
-                    { id:533, ar:"مريضة", pron:"Mareedhah", np:{am:"መሪዳ",bn:"মারিদা",hi:"मरीधा"}, t:{en:"Sick",ph:"May sakit",id:"Sakit",am:"ታምሜአለሁ",or:"Dhukkubsataa",sw:"Mgonjwa",lg:"Ndwadde",so:"Bukaan",bn:"অসুস্থ",hi:"बीमार",fr:"Malade"} },
+                    { id:533, ar:"مريضة", pron:"Mareedhah", np:{am:"መሪዳ",bn:"মারিদা",hi:"मريضا"}, t:{en:"Sick",ph:"May sakit",id:"Sakit",am:"ታምሜአለሁ",or:"Dhukkubsataa",sw:"Mgonjwa",lg:"Ndwadde",so:"Bukaan",bn:"অসুস্থ",hi:"बीमार",fr:"Malade"} },
                     { id:534, ar:"ألم", pron:"Alam", np:{am:"አલાም",bn:"আلام",hi:"अलम"}, t:{en:"Pain",ph:"Masakit",id:"Sakit",am:"ህመም",or:"Dhukkubbii",sw:"Maumivu",lg:"Obulumi",so:"Xanuun",bn:"ব্যথা",hi:"दर्द",fr:"Douleur"} },
                     { id:535, ar:"لا تنسين", pron:"La Tanseen", np:{am:"ላ ታንሲን",bn:"লা তানসিন",hi:"ला तन्सीन"}, t:{en:"Don't forget",ph:"Huwag kalimutan",id:"Jangan lupa",am:"አትርሺ",or:"Hin irraanfatin",sw:"Usisahau",lg:"Tewerabira",so:"Ha iloobin",bn:"ভুলو না",hi:"मत भूलना",fr:"N'oublie pas"} }
                 ]
@@ -595,14 +612,15 @@
         ];
 
         let selectedWords = [];
-        let learnedWords = []; // مصفوفة الكلمات المحفوظة المضافة حديثاً
+        let learnedWords = []; 
+        let pressTimer;
+        let isLongPress = false;
         
         try {
             let data = JSON.parse(localStorage.getItem('awalem_dict_v13_words'));
             if (Array.isArray(data)) {
                 selectedWords = data.map(Number).filter(n => !isNaN(n) && n > 0);
             }
-            // جلب الأرشيف من التخزين المحلي
             let lData = JSON.parse(localStorage.getItem('awalem_dict_learned_v1'));
             if (Array.isArray(lData)) {
                 learnedWords = lData.map(Number).filter(n => !isNaN(n) && n > 0);
@@ -615,19 +633,29 @@
 
         function initDictionary() { renderWordBank(); renderTable(); }
 
-        // الدالة الجديدة لنقل الكلمات بين البنك والأرشيف
+        // ================== [ 3. التحكم بالضغطة المطولة ] ==================
+        function startPress(e, id) {
+            isLongPress = false;
+            pressTimer = setTimeout(() => {
+                isLongPress = true;
+                if(navigator.vibrate) navigator.vibrate(50); // هزة خفيفة للتأكيد (في حال كان الجهاز يدعمها)
+                toggleLearned(e, id);
+            }, 500); // 500 ملي ثانية للضغطة المطولة
+        }
+
+        function cancelPress() {
+            clearTimeout(pressTimer);
+        }
+
         function toggleLearned(e, id) {
-            e.preventDefault(); // منع ظهور القائمة الافتراضية للزر الأيمن
+            if(e && e.preventDefault) e.preventDefault(); // إيقاف القائمة الافتراضية للكمبيوتر والجوال
             id = Number(id);
             const index = learnedWords.indexOf(id);
             
             if (index > -1) {
-                // إزالة الكلمة من الأرشيف وإعادتها للبنك
                 learnedWords.splice(index, 1);
             } else {
-                // إضافة الكلمة للأرشيف
                 learnedWords.push(id);
-                // إزالتها من الجدول في حال كانت محددة مسبقاً
                 const selIndex = selectedWords.indexOf(id);
                 if (selIndex > -1) {
                     selectedWords.splice(selIndex, 1);
@@ -640,6 +668,21 @@
             renderTable();
         }
 
+        function toggleWord(id) {
+            if(isLongPress) return; // منع التحديد إذا كانت الضغطة مطولة
+            id = Number(id);
+            const index = selectedWords.findIndex(sid => Number(sid) === id);
+            if (index > -1) { selectedWords.splice(index, 1); } else { selectedWords.push(id); }
+            localStorage.setItem('awalem_dict_v13_words', JSON.stringify(selectedWords));
+            renderWordBank(); renderTable();   
+        }
+
+        function toggleAll() {
+            selectedWords = []; localStorage.setItem('awalem_dict_v13_words', JSON.stringify(selectedWords));
+            renderWordBank(); renderTable();
+        }
+
+        // ================== [ 4. تحديث الواجهة ] ==================
         function renderWordBank() {
             const container = document.getElementById('wordBankContainer');
             const learnedArchive = document.getElementById('learnedArchive');
@@ -655,16 +698,24 @@
                 
                 section.words.forEach(word => {
                     const id = Number(word.id);
-                    
+                    // ربط أحداث اللمس والماوس لكل كلمة لدعم الضغطة المطولة بشكل مثالي
+                    const eventBindings = `
+                        onmousedown="startPress(event, ${id})" 
+                        onmouseup="cancelPress()" 
+                        onmouseleave="cancelPress()" 
+                        ontouchstart="startPress(event, ${id})" 
+                        ontouchend="cancelPress()" 
+                        ontouchmove="cancelPress()" 
+                        oncontextmenu="toggleLearned(event, ${id})"
+                    `;
+
                     if (learnedWords.includes(id)) {
-                        // طباعة الكلمات المحفوظة في الأرشيف
-                        learnedContainer.innerHTML += `<div class="word-tag learned-tag" oncontextmenu="toggleLearned(event, ${id})">${word.ar}</div>`;
+                        learnedContainer.innerHTML += `<div class="word-tag learned-tag" ${eventBindings}>${word.ar}</div>`;
                         hasLearnedWords = true;
                     } else {
-                        // طباعة الكلمات في البنك الأساسي
                         const isActive = selectedWords.some(sid => Number(sid) === id);
                         const activeClass = isActive ? 'active' : '';
-                        sectionHTML += `<div class="word-tag ${activeClass}" onclick="toggleWord(${id})" oncontextmenu="toggleLearned(event, ${id})">${word.ar}</div>`;
+                        sectionHTML += `<div class="word-tag ${activeClass}" ${eventBindings} onclick="toggleWord(${id})">${word.ar}</div>`;
                         hasActiveWords = true;
                     }
                 });
@@ -675,25 +726,11 @@
                 }
             });
 
-            // إظهار أو إخفاء بطاقة الأرشيف
             if (hasLearnedWords) {
                 learnedArchive.style.display = 'block';
             } else {
                 learnedArchive.style.display = 'none';
             }
-        }
-
-        function toggleWord(id) {
-            id = Number(id);
-            const index = selectedWords.findIndex(sid => Number(sid) === id);
-            if (index > -1) { selectedWords.splice(index, 1); } else { selectedWords.push(id); }
-            localStorage.setItem('awalem_dict_v13_words', JSON.stringify(selectedWords));
-            renderWordBank(); renderTable();   
-        }
-
-        function toggleAll() {
-            selectedWords = []; localStorage.setItem('awalem_dict_v13_words', JSON.stringify(selectedWords));
-            renderWordBank(); renderTable();
         }
 
         function renderTable() {
